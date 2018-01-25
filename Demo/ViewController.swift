@@ -123,18 +123,23 @@ final class TagField: UIScrollView {
     
     private let textField = UITextField()
     
+    // - MARK: Stored properties
     var delimiter: String?
     
     var tagBetweenSpace: CGFloat = 2.0
     
     var lineBetweenSpace: CGFloat = 3.0
     
-    var intrinsicContentHeight: CGFloat = 50
+    private var intrinsicContentHeight: CGFloat = 50
     
     var padding: UIEdgeInsets = .zero {
         didSet {
             setNeedsLayout()
         }
+    }
+    
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: bounds.width - (padding.left + padding.right), height: intrinsicContentHeight)
     }
     
     // - MARK: TagView properties
@@ -178,7 +183,7 @@ final class TagField: UIScrollView {
         let tagView = createTagView(text: text)
         addSubview(tagView)
         tagViews.append(tagView)
-        setNeedsLayout()
+        repositionSubviews()
     }
     
     private func createTagView(text: String) -> TagView {
@@ -191,11 +196,6 @@ final class TagField: UIScrollView {
             self.tagDelegate?.tagField(self, didSelect: $0)
         }
         return tagView
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        repositionSubviews()
     }
     
     private func repositionSubviews() {
@@ -243,7 +243,11 @@ final class TagField: UIScrollView {
         } else {
             textField.frame = CGRect(x: x, y: y, width: spaceWidth, height: h)
         }
-        intrinsicContentHeight = y + h + padding.bottom
+        intrinsicContentHeight = y + h - padding.top
+        invalidateIntrinsicContentSize()
+        
+        contentSize = CGSize(width: bounds.width, height: intrinsicContentHeight + padding.top + padding.bottom)
+        scrollRectToVisible(textField.frame, animated: false)
     }
 }
 
