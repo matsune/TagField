@@ -34,6 +34,15 @@ open class TagField: UIScrollView {
         }
     }
     
+    open var isReadonly = false {
+        didSet {
+            if !oldValue {
+                textField.resignFirstResponder()
+            }
+            textField.isEnabled = !isReadonly
+        }
+    }
+    
     // MARK: - TagLabel properties
     open var tagPadding: UIEdgeInsets = .zero {
         didSet {
@@ -145,7 +154,9 @@ open class TagField: UIScrollView {
     // MARK: - Private methods
     @objc
     private func handleTap(_ recognizer: UITapGestureRecognizer) {
-        textField.becomeFirstResponder()
+        if !isReadonly {
+            textField.becomeFirstResponder()
+        }
     }
     
     private func createTagLabel(text: String) -> TagLabel {
@@ -215,6 +226,11 @@ open class TagField: UIScrollView {
     }
     
     private func onTapTagLabel(_ tagLabel: TagLabel) {
+        if isReadonly {
+            tagDelegate?.tagField(self, didSelect: tagLabel.text)
+            return
+        }
+        
         textField.becomeFirstResponder()
         if !allowMultipleSelection {
             selectedTagLabels.forEach { $0.setSelected(false, animated: true) }
