@@ -7,19 +7,42 @@
 //
 
 import Foundation
+import UIKit
 
 public protocol TagFieldDelegate: class {
     func tagField(_ tagField: TagField, didSelect tag: String?)
     func tagFieldShouldReturn(_ tagField: TagField) -> Bool
+    func tagFieldDidBeginEditing(_ tagField: TagField)
+    func tagFieldDidEndEditing(_ tagField: TagField)
+    func tagFieldDidEndEditing(_ tagField: TagField, reason: UITextFieldDidEndEditingReason)
+    func tagFieldShouldClear(_ tagField: TagField) -> Bool
+    func tagFieldShouldEndEditing(_ tagField: TagField) -> Bool
+    func tagFieldShouldBeginEditing(_ tagField: TagField) -> Bool
 }
 
 extension TagFieldDelegate {
     
-    func tagField(_ tagField: TagField, didSelect tag: String?) {
-        print("didSelect")
-    }
+    func tagField(_ tagField: TagField, didSelect tag: String?) {}
     
     func tagFieldShouldReturn(_ tagField: TagField) -> Bool {
+        return true
+    }
+    
+    func tagFieldDidBeginEditing(_ tagField: TagField) {}
+    
+    func tagFieldDidEndEditing(_ tagField: TagField) {}
+    
+    func tagFieldDidEndEditing(_ tagField: TagField, reason: UITextFieldDidEndEditingReason) {}
+    
+    func tagFieldShouldClear(_ tagField: TagField) -> Bool {
+        return false
+    }
+    
+    func tagFieldShouldEndEditing(_ tagField: TagField) -> Bool {
+        return true
+    }
+    
+    func tagFieldShouldBeginEditing(_ tagField: TagField) -> Bool {
         return true
     }
 }

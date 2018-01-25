@@ -294,5 +294,26 @@ extension TagField: UITextFieldDelegate {
     
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         clearAllSelection(animated: true)
+        tagDelegate?.tagFieldDidBeginEditing(self)
+    }
+    
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        tagDelegate?.tagFieldDidEndEditing(self)
+    }
+    
+    public func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
+        tagDelegate?.tagFieldDidEndEditing(self, reason: reason)
+    }
+    
+    public func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        return tagDelegate?.tagFieldShouldClear(self) ?? false
+    }
+    
+    public func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        return tagDelegate?.tagFieldShouldEndEditing(self) ?? true
+    }
+    
+    public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return tagDelegate?.tagFieldShouldBeginEditing(self) ?? true
     }
 }
