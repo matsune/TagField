@@ -13,7 +13,7 @@ open class TagField: UIScrollView {
     
     weak open var tagDelegate: TagFieldDelegate?
     
-    private var tagViews: [TagView] = []
+    private var tagLabels: [TagLabel] = []
     
     private let textField = BackspaceDetectTextField()
     
@@ -34,34 +34,34 @@ open class TagField: UIScrollView {
         }
     }
     
-    // - MARK: TagView properties
+    // - MARK: TagLabel properties
     open var tagPadding: UIEdgeInsets = .zero {
         didSet {
-            tagViews.forEach { $0.padding = tagPadding }
+            tagLabels.forEach { $0.padding = tagPadding }
         }
     }
     
     open var tagTextColor: UIColor = .black {
         didSet {
-            tagViews.forEach { $0.normalTextColor = tagTextColor }
+            tagLabels.forEach { $0.normalTextColor = tagTextColor }
         }
     }
     
     open var tagBackgroundColor: UIColor = .clear {
         didSet {
-            tagViews.forEach { $0.normalBackgroundColor = tagBackgroundColor }
+            tagLabels.forEach { $0.normalBackgroundColor = tagBackgroundColor }
         }
     }
     
     open var tagSelectedTextColor: UIColor = .white {
         didSet {
-            tagViews.forEach { $0.selectedTextColor = tagSelectedTextColor }
+            tagLabels.forEach { $0.selectedTextColor = tagSelectedTextColor }
         }
     }
     
     open var tagSelectedBackgroundColor: UIColor = .orange {
         didSet {
-            tagViews.forEach { $0.selectedBackgroundColor = tagSelectedBackgroundColor }
+            tagLabels.forEach { $0.selectedBackgroundColor = tagSelectedBackgroundColor }
         }
     }
     
@@ -70,8 +70,8 @@ open class TagField: UIScrollView {
         return CGSize(width: bounds.width - (padding.left + padding.right), height: intrinsicContentHeight)
     }
     
-    private var selectedTagViews: [TagView] {
-        return tagViews.filter { $0.isSelected }
+    private var selectedTagLabels: [TagLabel] {
+        return tagLabels.filter { $0.isSelected }
     }
     
     // - MARK: Initializer
@@ -109,20 +109,20 @@ open class TagField: UIScrollView {
     
     // - MARK: Public methods
     public func addTag(text: String) {
-        if tagViews.contains(where: {$0.text == text}) {
+        if tagLabels.contains(where: {$0.text == text}) {
             clearTextField()
             return
         }
         
-        let tagView = createTagView(text: text)
-        addSubview(tagView)
-        tagViews.append(tagView)
+        let tagLabel = createTagLabel(text: text)
+        addSubview(tagLabel)
+        tagLabels.append(tagLabel)
         repositionSubviews()
     }
     
     public func deleteTag(text: String) {
-        if let tagView = tagViews.first(where: {$0.text == text}) {
-            deleteTagView(tagView)
+        if let tagLabel = tagLabels.first(where: {$0.text == text}) {
+            deleteTagLabel(tagLabel)
         }
     }
     
@@ -132,17 +132,17 @@ open class TagField: UIScrollView {
         textField.becomeFirstResponder()
     }
     
-    private func createTagView(text: String) -> TagView {
-        let tagView = TagView()
-        tagView.isUserInteractionEnabled = true
-        tagView.normalTextColor = tagTextColor
-        tagView.normalBackgroundColor = tagBackgroundColor
-        tagView.selectedTextColor = tagSelectedTextColor
-        tagView.selectedBackgroundColor = tagSelectedBackgroundColor
-        tagView.padding = tagPadding
-        tagView.text = text
-        tagView.onTap = onTapTagView(_:)
-        return tagView
+    private func createTagLabel(text: String) -> TagLabel {
+        let tagLabel = TagLabel()
+        tagLabel.isUserInteractionEnabled = true
+        tagLabel.normalTextColor = tagTextColor
+        tagLabel.normalBackgroundColor = tagBackgroundColor
+        tagLabel.selectedTextColor = tagSelectedTextColor
+        tagLabel.selectedBackgroundColor = tagSelectedBackgroundColor
+        tagLabel.padding = tagPadding
+        tagLabel.text = text
+        tagLabel.onTap = onTapTagLabel(_:)
+        return tagLabel
     }
     
     private func repositionSubviews() {
@@ -153,8 +153,8 @@ open class TagField: UIScrollView {
         
         var x: CGFloat = padding.left
         var y: CGFloat = padding.top
-        for tagView in tagViews {
-            let tagSize = tagView.intrinsicContentSize
+        for tagLabel in tagLabels {
+            let tagSize = tagLabel.intrinsicContentSize
             let spaceWidth = fullWidth - x
             
             if tagSize.width > spaceWidth {
@@ -166,14 +166,14 @@ open class TagField: UIScrollView {
                 
                 if tagSize.width > fullWidth {
                     // cripping
-                    tagView.frame = CGRect(x: x, y: y, width: fullWidth, height: tagSize.height)
+                    tagLabel.frame = CGRect(x: x, y: y, width: fullWidth, height: tagSize.height)
                 } else {
-                    tagView.sizeToFit()
-                    tagView.frame.origin = CGPoint(x: x, y: y)
+                    tagLabel.sizeToFit()
+                    tagLabel.frame.origin = CGPoint(x: x, y: y)
                 }
             } else {
-                tagView.sizeToFit()
-                tagView.frame.origin = CGPoint(x: x, y: y)
+                tagLabel.sizeToFit()
+                tagLabel.frame.origin = CGPoint(x: x, y: y)
             }
             x += tagSize.width + tagBetweenSpace
             maxHeightOfLine = max(maxHeightOfLine, tagSize.height)
@@ -197,13 +197,13 @@ open class TagField: UIScrollView {
         scrollRectToVisible(textField.frame, animated: false)
     }
     
-    private func onTapTagView(_ tagView: TagView) {
+    private func onTapTagLabel(_ tagLabel: TagLabel) {
         textField.becomeFirstResponder()
         if !allowMultipleSelection {
-            selectedTagViews.forEach { $0.setSelected(false, animated: true) }
+            selectedTagLabels.forEach { $0.setSelected(false, animated: true) }
         }
-        tagView.setSelected(true, animated: true)
-        tagDelegate?.tagField(self, didSelect: tagView)
+        tagLabel.setSelected(true, animated: true)
+        tagDelegate?.tagField(self, didSelect: tagLabel.text)
     }
     
     private func clearTextField() {
@@ -211,22 +211,22 @@ open class TagField: UIScrollView {
     }
     
     private func clearAllSelection(animated: Bool) {
-        tagViews
+        tagLabels
             .filter { $0.isSelected }
             .forEach { $0.setSelected(false, animated: true) }
     }
     
     private func onDeleteBackward() {
-        let tagViews = selectedTagViews
-        tagViews.forEach {
-            deleteTagView($0)
+        let tagLabels = selectedTagLabels
+        tagLabels.forEach {
+            deleteTagLabel($0)
         }
     }
     
-    private func deleteTagView(_ tagView: TagView) {
-        tagView.removeFromSuperview()
-        if let index = tagViews.index(of: tagView) {
-            tagViews.remove(at: index)
+    private func deleteTagLabel(_ tagLabel: TagLabel) {
+        tagLabel.removeFromSuperview()
+        if let index = tagLabels.index(of: tagLabel) {
+            tagLabels.remove(at: index)
         }
         repositionSubviews()
     }

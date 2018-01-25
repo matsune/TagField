@@ -9,13 +9,13 @@
 import Foundation
 
 public protocol TagFieldDelegate: class {
-    func tagField(_ tagField: TagField, didSelect tag: TagView)
+    func tagField(_ tagField: TagField, didSelect tag: String?)
     func tagFieldShouldReturn(_ tagField: TagField) -> Bool
 }
 
 extension TagFieldDelegate {
     
-    func tagField(_ tagField: TagField, didSelect tag: TagView) {
+    func tagField(_ tagField: TagField, didSelect tag: String?) {
         print("didSelect")
     }
     

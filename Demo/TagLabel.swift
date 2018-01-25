@@ -1,5 +1,5 @@
 //
-//  TagView.swift
+//  TagLabel.swift
 //  Demo
 //
 //  Created by Yuma Matsune on 2018/01/25.
@@ -9,9 +9,9 @@
 import Foundation
 import UIKit
 
-open class TagView: PaddingLabel {
+open class TagLabel: PaddingLabel {
     
-    internal var onTap: ((TagView) -> Void)?
+    internal var onTap: ((TagLabel) -> Void)?
     
     public private(set) var isSelected = false
     
@@ -50,7 +50,7 @@ open class TagView: PaddingLabel {
     }
     
     private func setup() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TagView.handleTap(_:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TagLabel.handleTap(_:)))
         addGestureRecognizer(tapGesture)
     }
     
