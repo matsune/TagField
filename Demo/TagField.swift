@@ -24,6 +24,8 @@ open class TagField: UIScrollView {
     
     open var lineBetweenSpace: CGFloat = 3.0
     
+    open var allowMultipleSelection = false
+    
     private var intrinsicContentHeight: CGFloat = 50
     
     open var padding: UIEdgeInsets = .zero {
@@ -39,9 +41,27 @@ open class TagField: UIScrollView {
         }
     }
     
+    open var tagTextColor: UIColor = .black {
+        didSet {
+            tagViews.forEach { $0.normalTextColor = tagTextColor }
+        }
+    }
+    
     open var tagBackgroundColor: UIColor = .clear {
         didSet {
-            tagViews.forEach { $0.backgroundColor = tagBackgroundColor }
+            tagViews.forEach { $0.normalBackgroundColor = tagBackgroundColor }
+        }
+    }
+    
+    open var tagSelectedTextColor: UIColor = .white {
+        didSet {
+            tagViews.forEach { $0.selectedTextColor = tagSelectedTextColor }
+        }
+    }
+    
+    open var tagSelectedBackgroundColor: UIColor = .orange {
+        didSet {
+            tagViews.forEach { $0.selectedBackgroundColor = tagSelectedBackgroundColor }
         }
     }
     
@@ -75,6 +95,11 @@ open class TagField: UIScrollView {
     }
     
     public func addTag(text: String) {
+        if tagViews.contains(where: {$0.text == text}) {
+            clearTextField()
+            return
+        }
+        
         let tagView = createTagView(text: text)
         addSubview(tagView)
         tagViews.append(tagView)
@@ -84,12 +109,13 @@ open class TagField: UIScrollView {
     private func createTagView(text: String) -> TagView {
         let tagView = TagView()
         tagView.isUserInteractionEnabled = true
-        tagView.backgroundColor = tagBackgroundColor
+        tagView.normalTextColor = tagTextColor
+        tagView.normalBackgroundColor = tagBackgroundColor
+        tagView.selectedTextColor = tagSelectedTextColor
+        tagView.selectedBackgroundColor = tagSelectedBackgroundColor
         tagView.padding = tagPadding
         tagView.text = text
-        tagView.onTap = {
-            self.tagDelegate?.tagField(self, didSelect: $0)
-        }
+        tagView.onTap = onTapTagView(_:)
         return tagView
     }
     
@@ -144,6 +170,27 @@ open class TagField: UIScrollView {
         contentSize = CGSize(width: bounds.width, height: intrinsicContentHeight + padding.top + padding.bottom)
         scrollRectToVisible(textField.frame, animated: false)
     }
+    
+    private func onTapTagView(_ tagView: TagView) {
+        textField.resignFirstResponder()
+        if !allowMultipleSelection {
+            tagViews
+                .filter { $0.isSelected }
+                .filter { $0 != tagView }
+                .forEach { $0.setSelected(false, animated: true) }
+        }
+        tagDelegate?.tagField(self, didSelect: tagView)
+    }
+    
+    private func clearTextField() {
+        textField.text = nil
+    }
+    
+    private func clearAllSelection(animated: Bool) {
+        tagViews
+            .filter { $0.isSelected }
+            .forEach { $0.setSelected(false, animated: true) }
+    }
 }
 
 extension TagField: UITextFieldDelegate {
@@ -165,7 +212,11 @@ extension TagField: UITextFieldDelegate {
     private func tokenizeTextField(_ textField: UITextField) {
         if let text = textField.text, !text.isEmpty {
             addTag(text: text)
-            textField.text = nil
+            clearTextField()
         }
+    }
+    
+    public func textFieldDidBeginEditing(_ textField: UITextField) {
+        clearAllSelection(animated: true)
     }
 }

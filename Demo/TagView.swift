@@ -11,7 +11,33 @@ import UIKit
 
 open class TagView: PaddingLabel {
     
-    var onTap: ((TagView) -> Void)?
+    internal var onTap: ((TagView) -> Void)?
+    
+    public private(set) var isSelected = false
+    
+    open var normalTextColor: UIColor = .black {
+        didSet {
+            updateContent(animated: false)
+        }
+    }
+    
+    open var normalBackgroundColor: UIColor = .orange {
+        didSet {
+            updateContent(animated: false)
+        }
+    }
+    
+    open var selectedTextColor: UIColor = .white {
+        didSet {
+            updateContent(animated: false)
+        }
+    }
+    
+    open var selectedBackgroundColor: UIColor = .orange {
+        didSet {
+            updateContent(animated: false)
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,6 +56,30 @@ open class TagView: PaddingLabel {
     
     @objc
     private func handleTap(_ recognizer: UITapGestureRecognizer) {
+        setSelected(true, animated: true)
         onTap?(self)
+    }
+    
+    public func setSelected(_ selected: Bool, animated: Bool) {
+        isSelected = selected
+        updateContent(animated: animated)
+    }
+    
+    private func updateContent(animated: Bool) {
+        let updateColor = {
+            if self.isSelected {
+                self.backgroundColor = self.selectedBackgroundColor
+                self.textColor = self.selectedTextColor
+            } else {
+                self.backgroundColor = self.normalBackgroundColor
+                self.textColor = self.normalTextColor
+            }
+        }
+        
+        if animated {
+            UIView.transition(with: self, duration: 0.2, options: .transitionCrossDissolve, animations: updateColor, completion: nil)
+        } else {
+            updateColor()
+        }
     }
 }

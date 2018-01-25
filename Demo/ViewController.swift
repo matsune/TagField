@@ -24,7 +24,7 @@ final class ViewController: UIViewController {
         tagField.addTag(text: "aaaaaaaaaaaaaaaaa")
         tagField.addTag(text: "aaadasfdfsads")
         tagField.addTag(text: "aaaddd")
-        tagField.tagBackgroundColor = .orange
+        tagField.tagBackgroundColor = .blue
         
         view.addSubview(tagField)
     }
