@@ -56,7 +56,6 @@ open class TagView: PaddingLabel {
     
     @objc
     private func handleTap(_ recognizer: UITapGestureRecognizer) {
-        setSelected(true, animated: true)
         onTap?(self)
     }
     

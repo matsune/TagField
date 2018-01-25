@@ -15,7 +15,7 @@ open class TagField: UIScrollView {
     
     private var tagViews: [TagView] = []
     
-    private let textField = UITextField()
+    private let textField = BackspaceDetectTextField()
     
     // - MARK: Stored properties
     open var delimiter: String?
@@ -70,6 +70,10 @@ open class TagField: UIScrollView {
         return CGSize(width: bounds.width - (padding.left + padding.right), height: intrinsicContentHeight)
     }
     
+    private var selectedTagViews: [TagView] {
+        return tagViews.filter { $0.isSelected }
+    }
+    
     // - MARK: Initializer
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -86,14 +90,24 @@ open class TagField: UIScrollView {
         addGestureRecognizer(tapGesture)
         
         textField.delegate = self
+        textField.onDeleteBackward = onDeleteBackward
         addSubview(textField)
     }
     
-    @objc
-    private func handleTap(_ recognizer: UITapGestureRecognizer) {
-        textField.becomeFirstResponder()
+    // - MARK: Override
+    @discardableResult
+    open override func becomeFirstResponder() -> Bool {
+        return textField.becomeFirstResponder()
     }
     
+    @discardableResult
+    open override func resignFirstResponder() -> Bool {
+        clearAllSelection(animated: true)
+        tokenizeTextField()
+        return textField.resignFirstResponder()
+    }
+    
+    // - MARK: Public methods
     public func addTag(text: String) {
         if tagViews.contains(where: {$0.text == text}) {
             clearTextField()
@@ -104,6 +118,18 @@ open class TagField: UIScrollView {
         addSubview(tagView)
         tagViews.append(tagView)
         repositionSubviews()
+    }
+    
+    public func deleteTag(text: String) {
+        if let tagView = tagViews.first(where: {$0.text == text}) {
+            deleteTagView(tagView)
+        }
+    }
+    
+    // - MARK: Private methods
+    @objc
+    private func handleTap(_ recognizer: UITapGestureRecognizer) {
+        textField.becomeFirstResponder()
     }
     
     private func createTagView(text: String) -> TagView {
@@ -172,13 +198,11 @@ open class TagField: UIScrollView {
     }
     
     private func onTapTagView(_ tagView: TagView) {
-        textField.resignFirstResponder()
+        textField.becomeFirstResponder()
         if !allowMultipleSelection {
-            tagViews
-                .filter { $0.isSelected }
-                .filter { $0 != tagView }
-                .forEach { $0.setSelected(false, animated: true) }
+            selectedTagViews.forEach { $0.setSelected(false, animated: true) }
         }
+        tagView.setSelected(true, animated: true)
         tagDelegate?.tagField(self, didSelect: tagView)
     }
     
@@ -191,25 +215,42 @@ open class TagField: UIScrollView {
             .filter { $0.isSelected }
             .forEach { $0.setSelected(false, animated: true) }
     }
+    
+    private func onDeleteBackward() {
+        let tagViews = selectedTagViews
+        tagViews.forEach {
+            deleteTagView($0)
+        }
+    }
+    
+    private func deleteTagView(_ tagView: TagView) {
+        tagView.removeFromSuperview()
+        if let index = tagViews.index(of: tagView) {
+            tagViews.remove(at: index)
+        }
+        repositionSubviews()
+    }
 }
 
 extension TagField: UITextFieldDelegate {
+    // - MARK: UITextFieldDelegate
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        clearAllSelection(animated: true)
         scrollRectToVisible(textField.frame, animated: true)
         
         if string == delimiter {
-            tokenizeTextField(textField)
+            tokenizeTextField()
             return false
         }
         return true
     }
     
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        tokenizeTextField(textField)
+        tokenizeTextField()
         return tagDelegate?.tagFieldShouldReturn(self) ?? true
     }
     
-    private func tokenizeTextField(_ textField: UITextField) {
+    private func tokenizeTextField() {
         if let text = textField.text, !text.isEmpty {
             addTag(text: text)
             clearTextField()

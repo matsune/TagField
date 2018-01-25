@@ -27,7 +27,13 @@ final class ViewController: UIViewController {
         tagField.tagBackgroundColor = .blue
         
         view.addSubview(tagField)
+        
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(ViewController.didTapView(recognizer:))))
     }
 
+    @objc
+    func didTapView(recognizer: UITapGestureRecognizer) {
+        tagField.resignFirstResponder()
+    }
 }
 
