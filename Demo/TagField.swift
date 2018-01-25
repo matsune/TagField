@@ -26,7 +26,7 @@ open class TagField: UIScrollView {
     
     open var allowMultipleSelection = false
     
-    private var intrinsicContentHeight: CGFloat = 50
+    open var numberOfLines = 1
     
     open var padding: UIEdgeInsets = .zero {
         didSet {
@@ -42,6 +42,8 @@ open class TagField: UIScrollView {
             textField.isEnabled = !isReadonly
         }
     }
+    
+    private var intrinsicContentHeight: CGFloat = 50
     
     // MARK: - TagLabel properties
     open var tagPadding: UIEdgeInsets = .zero {
@@ -81,10 +83,6 @@ open class TagField: UIScrollView {
     }
     
     // MARK: - Computed properties
-    override open var intrinsicContentSize: CGSize {
-        return CGSize(width: bounds.width - (padding.left + padding.right), height: intrinsicContentHeight)
-    }
-    
     open var font: UIFont? {
         set {
             textField.font = newValue
@@ -120,6 +118,10 @@ open class TagField: UIScrollView {
     }
     
     // MARK: - Override
+    override open var intrinsicContentSize: CGSize {
+        return CGSize(width: bounds.width - (padding.left + padding.right), height: intrinsicContentHeight)
+    }
+    
     @discardableResult
     open override func becomeFirstResponder() -> Bool {
         return textField.becomeFirstResponder()
@@ -176,7 +178,7 @@ open class TagField: UIScrollView {
     private func repositionSubviews() {
         let fullWidth = bounds.width - (padding.left + padding.right)
         
-        var numOfLines = 1
+        numberOfLines = 1
         var maxHeightOfLine: CGFloat = 0
         
         var x: CGFloat = padding.left
@@ -190,7 +192,7 @@ open class TagField: UIScrollView {
                 x = padding.left
                 y += maxHeightOfLine + lineBetweenSpace
                 maxHeightOfLine = 0
-                numOfLines += 1
+                numberOfLines += 1
                 
                 if tagSize.width > fullWidth {
                     // clipping
