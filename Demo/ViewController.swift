@@ -23,9 +23,16 @@ open class PaddingLabel: UILabel {
     
     open override var intrinsicContentSize: CGSize {
         var intrinsicContentSize = super.intrinsicContentSize
-        intrinsicContentSize.height += (padding.top + padding.bottom)
         intrinsicContentSize.width += (padding.left + padding.right)
+        intrinsicContentSize.height += (padding.top + padding.bottom)
+        intrinsicContentSize.height += fontDescent
         return intrinsicContentSize
+    }
+    
+    private var fontDescent: CGFloat {
+        let f = CTFontCreateWithName(font.fontName as CFString, font.pointSize, nil)
+        let descentHeight = ceilf(Float(CTFontGetDescent(f)))
+        return CGFloat(descentHeight)
     }
     
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -49,10 +56,61 @@ class TagView: PaddingLabel {
     
 }
 
+extension TagField: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if string == delimiter {
+            tokenizeTextField(textField)
+            return false
+        }
+        return true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        tokenizeTextField(textField)
+        return tagDelegate?.tagFieldShouldReturn(self) ?? true
+    }
+    
+    private func tokenizeTextField(_ textField: UITextField) {
+        if let text = textField.text, !text.isEmpty {
+            addTag(text: text)
+            textField.text = nil
+        }
+    }
+}
+
+protocol TagFieldDelegate: class {
+    func tagFieldShouldReturn(_ tagField: TagField) -> Bool
+}
+
+extension TagFieldDelegate {
+    func tagFieldShouldReturn(_ tagField: TagField) -> Bool {
+        return true
+    }
+}
+
 final class TagField: UIScrollView {
+    
+    weak var tagDelegate: TagFieldDelegate?
     
     private var tagViews: [TagView] = []
     
+    private let textField = UITextField()
+    
+    var delimiter: String?
+    
+    var tagBetweenSpace: CGFloat = 2.0
+    
+    var lineBetweenSpace: CGFloat = 3.0
+    
+    var intrinsicContentHeight: CGFloat = 50
+    
+    var padding: UIEdgeInsets = .zero {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+    
+    // - MARK: TagView properties
     var tagPadding: UIEdgeInsets = .zero {
         didSet {
             tagViews.forEach { $0.padding = tagPadding }
@@ -64,19 +122,23 @@ final class TagField: UIScrollView {
             tagViews.forEach { $0.backgroundColor = tagBackgroundColor }
         }
     }
-    
-    var padding: UIEdgeInsets = .zero {
-        didSet {
-            setNeedsLayout()
-        }
+
+    // - MARK: Initializer
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
     }
     
-    var tagBetweenSpace: CGFloat = 2.0
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
     
-    var lineBetweenSpace: CGFloat = 3.0
+    private func setup() {
+        textField.delegate = self
+        addSubview(textField)
+    }
     
-    var intrinsicContentHeight: CGFloat = 50
-
     func addTag(text: String) {
         let tagView = createTagView(text: text)
         addSubview(tagView)
@@ -86,6 +148,8 @@ final class TagField: UIScrollView {
     
     private func createTagView(text: String) -> TagView {
         let tagView = TagView()
+        tagView.backgroundColor = tagBackgroundColor
+        tagView.padding = tagPadding
         tagView.text = text
         return tagView
     }
@@ -128,34 +192,38 @@ final class TagField: UIScrollView {
             x += tagSize.width + tagBetweenSpace
             maxHeightOfLine = max(maxHeightOfLine, tagSize.height)
         }
+        
+        let textFieldMinWidth: CGFloat = 20
+        let spaceWidth = (fullWidth - x)
+        if spaceWidth < textFieldMinWidth {
+            // textField start next line
+            x = padding.left
+            y += maxHeightOfLine + lineBetweenSpace
+        }
+        let h = (textField.font?.pointSize ?? 15) + 3
+        textField.frame = CGRect(x: x, y: y, width: fullWidth, height: h)
     }
 }
 
 final class ViewController: UIViewController {
 
-    var d = TagField(frame: CGRect(x: 0, y: 100, width: 100, height: 100))
+    let tagField = TagField()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .gray
+     
+        tagField.frame = CGRect(x: 12, y: 50, width: view.bounds.width - 24, height: 100)
+        tagField.backgroundColor = .white
+        tagField.padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        tagField.addTag(text: "aaa")
+        tagField.addTag(text: "aa")
+        tagField.addTag(text: "aaaaaaaaaaaaaaaaa")
+        tagField.addTag(text: "aaadasfdfsads")
+        tagField.addTag(text: "aaaddd")
+        tagField.tagBackgroundColor = .orange
         
-        d.backgroundColor = .white
-        d.padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        d.addTag(text: "aaa")
-        d.addTag(text: "aa")
-        d.addTag(text: "aaaaaaaaaaaaaaaaa")
-        d.addTag(text: "aaadasfdfsads")
-        d.addTag(text: "aaaddd")
-        d.tagBackgroundColor = .orange
-        
-        view.addSubview(d)
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//
-//        }
+        view.addSubview(tagField)
     }
 
 }
