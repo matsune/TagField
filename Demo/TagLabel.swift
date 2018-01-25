@@ -39,6 +39,12 @@ open class TagLabel: PaddingLabel {
         }
     }
     
+    open var cornerRadius: CGFloat = 3 {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -52,6 +58,19 @@ open class TagLabel: PaddingLabel {
     private func setup() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TagLabel.handleTap(_:)))
         addGestureRecognizer(tapGesture)
+    }
+    
+    open override var intrinsicContentSize: CGSize {
+        return CGSize(width: super.intrinsicContentSize.width + (padding.left + padding.right),
+                      height: super.intrinsicContentSize.height + (padding.top + padding.bottom))
+    }
+    
+    open override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let fittingSize = CGSize(width: size.width - (padding.left + padding.right),
+                                 height: size.height - (padding.top + padding.bottom))
+        let labelSize = super.sizeThatFits(fittingSize)
+        return CGSize(width: labelSize.width + (padding.left + padding.right),
+                      height: labelSize.height + (padding.top + padding.bottom))
     }
     
     @objc
@@ -80,5 +99,11 @@ open class TagLabel: PaddingLabel {
         } else {
             updateColor()
         }
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.masksToBounds = true
+        layer.cornerRadius = cornerRadius
     }
 }

@@ -17,7 +17,7 @@ open class TagField: UIScrollView {
     
     private let textField = BackspaceDetectTextField()
     
-    // - MARK: Stored properties
+    // MARK: - Stored properties
     open var delimiter: String?
     
     open var tagBetweenSpace: CGFloat = 2.0
@@ -34,7 +34,7 @@ open class TagField: UIScrollView {
         }
     }
     
-    // - MARK: TagLabel properties
+    // MARK: - TagLabel properties
     open var tagPadding: UIEdgeInsets = .zero {
         didSet {
             tagLabels.forEach { $0.padding = tagPadding }
@@ -65,16 +65,32 @@ open class TagField: UIScrollView {
         }
     }
     
-    // - MARK: Computed properties
+    open var tagCornerRadius: CGFloat = 3.0 {
+        didSet {
+            tagLabels.forEach { $0.cornerRadius = tagCornerRadius }
+        }
+    }
+    
+    // MARK: - Computed properties
     override open var intrinsicContentSize: CGSize {
         return CGSize(width: bounds.width - (padding.left + padding.right), height: intrinsicContentHeight)
+    }
+    
+    open var font: UIFont? {
+        set {
+            textField.font = newValue
+            tagLabels.forEach { $0.font = newValue }
+        }
+        get {
+            return textField.font
+        }
     }
     
     private var selectedTagLabels: [TagLabel] {
         return tagLabels.filter { $0.isSelected }
     }
     
-    // - MARK: Initializer
+    // MARK: - Initializer
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -94,7 +110,7 @@ open class TagField: UIScrollView {
         addSubview(textField)
     }
     
-    // - MARK: Override
+    // MARK: - Override
     @discardableResult
     open override func becomeFirstResponder() -> Bool {
         return textField.becomeFirstResponder()
@@ -107,7 +123,7 @@ open class TagField: UIScrollView {
         return textField.resignFirstResponder()
     }
     
-    // - MARK: Public methods
+    // MARK: - Public methods
     public func addTag(text: String) {
         if tagLabels.contains(where: {$0.text == text}) {
             clearTextField()
@@ -126,7 +142,7 @@ open class TagField: UIScrollView {
         }
     }
     
-    // - MARK: Private methods
+    // MARK: - Private methods
     @objc
     private func handleTap(_ recognizer: UITapGestureRecognizer) {
         textField.becomeFirstResponder()
@@ -139,6 +155,7 @@ open class TagField: UIScrollView {
         tagLabel.normalBackgroundColor = tagBackgroundColor
         tagLabel.selectedTextColor = tagSelectedTextColor
         tagLabel.selectedBackgroundColor = tagSelectedBackgroundColor
+        tagLabel.cornerRadius = tagCornerRadius
         tagLabel.padding = tagPadding
         tagLabel.text = text
         tagLabel.onTap = onTapTagLabel(_:)
@@ -165,7 +182,7 @@ open class TagField: UIScrollView {
                 numOfLines += 1
                 
                 if tagSize.width > fullWidth {
-                    // cripping
+                    // clipping
                     tagLabel.frame = CGRect(x: x, y: y, width: fullWidth, height: tagSize.height)
                 } else {
                     tagLabel.sizeToFit()
@@ -233,7 +250,7 @@ open class TagField: UIScrollView {
 }
 
 extension TagField: UITextFieldDelegate {
-    // - MARK: UITextFieldDelegate
+    // MARK: - UITextFieldDelegate
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         clearAllSelection(animated: true)
         scrollRectToVisible(textField.frame, animated: true)
