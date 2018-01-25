@@ -54,6 +54,27 @@ open class PaddingLabel: UILabel {
 
 class TagView: PaddingLabel {
     
+    var onTap: ((TagView) -> Void)?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+    
+    private func setup() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TagView.handleTap(_:)))
+        addGestureRecognizer(tapGesture)
+    }
+    
+    @objc
+    private func handleTap(_ recognizer: UITapGestureRecognizer) {
+        onTap?(self)
+    }
 }
 
 extension TagField: UITextFieldDelegate {
@@ -79,10 +100,16 @@ extension TagField: UITextFieldDelegate {
 }
 
 protocol TagFieldDelegate: class {
+    func tagField(_ tagField: TagField, didSelect tag: TagView)
     func tagFieldShouldReturn(_ tagField: TagField) -> Bool
 }
 
 extension TagFieldDelegate {
+    
+    func tagField(_ tagField: TagField, didSelect tag: TagView) {
+        print("didSelect")
+    }
+    
     func tagFieldShouldReturn(_ tagField: TagField) -> Bool {
         return true
     }
@@ -135,8 +162,16 @@ final class TagField: UIScrollView {
     }
     
     private func setup() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TagField.handleTap(_:)))
+        addGestureRecognizer(tapGesture)
+        
         textField.delegate = self
         addSubview(textField)
+    }
+    
+    @objc
+    private func handleTap(_ recognizer: UITapGestureRecognizer) {
+        textField.becomeFirstResponder()
     }
     
     func addTag(text: String) {
@@ -148,9 +183,13 @@ final class TagField: UIScrollView {
     
     private func createTagView(text: String) -> TagView {
         let tagView = TagView()
+        tagView.isUserInteractionEnabled = true
         tagView.backgroundColor = tagBackgroundColor
         tagView.padding = tagPadding
         tagView.text = text
+        tagView.onTap = {
+            self.tagDelegate?.tagField(self, didSelect: $0)
+        }
         return tagView
     }
     
@@ -195,13 +234,16 @@ final class TagField: UIScrollView {
         
         let textFieldMinWidth: CGFloat = 20
         let spaceWidth = (fullWidth - x)
+        let h = (textField.font?.pointSize ?? 15) + 3
         if spaceWidth < textFieldMinWidth {
             // textField start next line
             x = padding.left
             y += maxHeightOfLine + lineBetweenSpace
+            textField.frame = CGRect(x: x, y: y, width: fullWidth, height: h)
+        } else {
+            textField.frame = CGRect(x: x, y: y, width: spaceWidth, height: h)
         }
-        let h = (textField.font?.pointSize ?? 15) + 3
-        textField.frame = CGRect(x: x, y: y, width: fullWidth, height: h)
+        intrinsicContentHeight = y + h + padding.bottom
     }
 }
 
