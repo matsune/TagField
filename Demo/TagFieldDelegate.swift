@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol TagFieldDelegate: class {
+public protocol TagFieldDelegate: class {
     func tagField(_ tagField: TagField, didSelect tag: TagView)
     func tagFieldShouldReturn(_ tagField: TagField) -> Bool
 }

@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class TagView: PaddingLabel {
+open class TagView: PaddingLabel {
     
     var onTap: ((TagView) -> Void)?
     
@@ -18,7 +18,7 @@ class TagView: PaddingLabel {
         setup()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
     }

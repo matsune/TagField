@@ -9,44 +9,45 @@
 import Foundation
 import UIKit
 
-final class TagField: UIScrollView {
+open class TagField: UIScrollView {
     
-    weak var tagDelegate: TagFieldDelegate?
+    weak open var tagDelegate: TagFieldDelegate?
     
     private var tagViews: [TagView] = []
     
     private let textField = UITextField()
     
     // - MARK: Stored properties
-    var delimiter: String?
+    open var delimiter: String?
     
-    var tagBetweenSpace: CGFloat = 2.0
+    open var tagBetweenSpace: CGFloat = 2.0
     
-    var lineBetweenSpace: CGFloat = 3.0
+    open var lineBetweenSpace: CGFloat = 3.0
     
     private var intrinsicContentHeight: CGFloat = 50
     
-    var padding: UIEdgeInsets = .zero {
+    open var padding: UIEdgeInsets = .zero {
         didSet {
             setNeedsLayout()
         }
     }
     
-    override var intrinsicContentSize: CGSize {
-        return CGSize(width: bounds.width - (padding.left + padding.right), height: intrinsicContentHeight)
-    }
-    
     // - MARK: TagView properties
-    var tagPadding: UIEdgeInsets = .zero {
+    open var tagPadding: UIEdgeInsets = .zero {
         didSet {
             tagViews.forEach { $0.padding = tagPadding }
         }
     }
     
-    var tagBackgroundColor: UIColor = .clear {
+    open var tagBackgroundColor: UIColor = .clear {
         didSet {
             tagViews.forEach { $0.backgroundColor = tagBackgroundColor }
         }
+    }
+    
+    // - MARK: Computed properties
+    override open var intrinsicContentSize: CGSize {
+        return CGSize(width: bounds.width - (padding.left + padding.right), height: intrinsicContentHeight)
     }
     
     // - MARK: Initializer
@@ -55,7 +56,7 @@ final class TagField: UIScrollView {
         setup()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
     }
@@ -73,7 +74,7 @@ final class TagField: UIScrollView {
         textField.becomeFirstResponder()
     }
     
-    func addTag(text: String) {
+    public func addTag(text: String) {
         let tagView = createTagView(text: text)
         addSubview(tagView)
         tagViews.append(tagView)
@@ -146,7 +147,9 @@ final class TagField: UIScrollView {
 }
 
 extension TagField: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        scrollRectToVisible(textField.frame, animated: true)
+        
         if string == delimiter {
             tokenizeTextField(textField)
             return false
@@ -154,7 +157,7 @@ extension TagField: UITextFieldDelegate {
         return true
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         tokenizeTextField(textField)
         return tagDelegate?.tagFieldShouldReturn(self) ?? true
     }
