@@ -1,0 +1,25 @@
+//
+//  TagFieldDelegate.swift
+//  Demo
+//
+//  Created by Yuma Matsune on 2018/01/25.
+//  Copyright © 2018年 matsune. All rights reserved.
+//
+
+import Foundation
+
+protocol TagFieldDelegate: class {
+    func tagField(_ tagField: TagField, didSelect tag: TagView)
+    func tagFieldShouldReturn(_ tagField: TagField) -> Bool
+}
+
+extension TagFieldDelegate {
+    
+    func tagField(_ tagField: TagField, didSelect tag: TagView) {
+        print("didSelect")
+    }
+    
+    func tagFieldShouldReturn(_ tagField: TagField) -> Bool {
+        return true
+    }
+}
