@@ -204,32 +204,35 @@ open class TagField: UIScrollView {
     }
     
     private func repositionSubviews() {
-        let fullWidth = bounds.width - (padding.left + padding.right)
-        
         numberOfLines = 1
         var lastTagViewHeight: CGFloat = 0
-        
-        var x: CGFloat = padding.left
+        var sideInset: (left: CGFloat, right: CGFloat) = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines) ?? (0, 0)
+        var x: CGFloat = padding.left + sideInset.left
         var y: CGFloat = padding.top
         
         // - tagLabels position
         
         for tagLabel in tagLabels {
             let tagSize = tagLabel.intrinsicContentSize
-            let spaceWidth = fullWidth - x
+            var availableWidth = bounds.width - x - (padding.right + sideInset.right)
             
-            if tagSize.width > spaceWidth {
+            if tagSize.width > availableWidth {
                 let isFirstTag = lastTagViewHeight == 0
                 if !isFirstTag {
                     // new line
-                    x = padding.left
-                    y += lastTagViewHeight + lineBetweenSpace
                     numberOfLines += 1
+                    sideInset = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines) ?? (0, 0)
+                    // reset point
+                    x = padding.left + sideInset.left
+                    y += lastTagViewHeight + lineBetweenSpace
+                    
+                    // refresh available width
+                    availableWidth = bounds.width - x - (padding.right + sideInset.right)
                 }
                 
-                if tagSize.width > fullWidth {
+                if tagSize.width > availableWidth {
                     // clipping
-                    tagLabel.frame = CGRect(x: x, y: y, width: fullWidth, height: tagSize.height)
+                    tagLabel.frame = CGRect(x: x, y: y, width: availableWidth, height: tagSize.height)
                 } else {
                     tagLabel.sizeToFit()
                     tagLabel.frame.origin = CGPoint(x: x, y: y)
@@ -244,14 +247,21 @@ open class TagField: UIScrollView {
         
         // - textField position
         
-        let availableWidth = (fullWidth - x)
+        let availableWidth = bounds.width - x - (padding.right + sideInset.right)
         if availableWidth < textFieldMinWidth {
             // textField start next line
-            x = padding.left
+            numberOfLines += 1
+            sideInset = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines) ?? (0, 0)
+            x = padding.left + sideInset.left
             y += lastTagViewHeight + lineBetweenSpace
+            
             textField.sizeToFit()
-            textField.frame.size.width = fullWidth
+            textField.frame.size.width = availableWidth
         } else {
+            if lastTagViewHeight == 0 {
+                textField.sizeToFit()
+                lastTagViewHeight = textField.frame.height
+            }
             textField.frame.size = CGSize(width: availableWidth, height: lastTagViewHeight)
         }
         textField.frame.origin = CGPoint(x: x, y: y)
@@ -315,7 +325,7 @@ open class TagField: UIScrollView {
             return
         }
         
-        if let text = textField.text, text.isEmpty {
+        if let text = textField.text, text.isEmpty && !tagLabels.isEmpty {
             // select last tag if textField is empty
             isHiddenCaret = true
             tagLabels.last?.setSelected(true, animated: true)

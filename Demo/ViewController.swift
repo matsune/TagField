@@ -18,9 +18,15 @@ final class ViewController: UIViewController {
         view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(ViewController.didTapView(recognizer:))))
 
+        let sharpLabel = UILabel(frame: CGRect(x: 12, y: 7, width: 25, height: 28))
+        sharpLabel.textAlignment = .center
+        sharpLabel.text = "♯"
+        sharpLabel.font = UIFont.systemFont(ofSize: 24)
+        tagField.addSubview(sharpLabel)
+        
         tagField.placeholder = "add tag..."
         tagField.tagDelegate = self
-        tagField.tintColor = UIColor.green
+        tagField.tagDataSource = self
         
         tagField.addTag(text: "tag1")
         tagField.addTag(text: "tag2")
@@ -78,5 +84,14 @@ extension ViewController: TagFieldDelegate {
     func tagFieldShouldEndEditing(_ tagField: TagField) -> Bool {
         print("shouldEndEditing")
         return true
+    }
+}
+
+extension ViewController: TagFieldDataSource {
+    func tagField(_ tagField: TagField, sideInsetAtLine line: Int) -> (left: CGFloat, right: CGFloat) {
+        if line == 1 {
+            return (30, 0)
+        }
+        return (0, 0)
     }
 }
