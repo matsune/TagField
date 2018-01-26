@@ -19,6 +19,8 @@ final class ViewController: UIViewController {
         
         tagField.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 200)
         tagField.placeholder = "add tag..."
+        tagField.tagDelegate = self
+        tagField.tintColor = UIColor.green
         
         view.addSubview(tagField)
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(ViewController.didTapView(recognizer:))))
@@ -40,3 +42,40 @@ final class ViewController: UIViewController {
     }
 }
 
+extension ViewController: TagFieldDelegate {
+    func tagField(_ tagField: TagField, didSelect tag: String?) {
+        print("didSelect \(String(describing: tag))")
+    }
+    
+    func tagFieldShouldReturn(_ tagField: TagField) -> Bool {
+        print("shouldReturn")
+        return true
+    }
+    
+    func tagFieldDidBeginEditing(_ tagField: TagField) {
+        print("didBeginEditing")
+    }
+    
+    func tagFieldDidEndEditing(_ tagField: TagField) {
+        print("didEndEditing")
+    }
+    
+    func tagFieldDidEndEditing(_ tagField: TagField, reason: UITextFieldDidEndEditingReason) {
+        print("didEndEditing reason: \(reason)")
+    }
+    
+    func tagFieldShouldClear(_ tagField: TagField) -> Bool {
+        print("shouldClear")
+        return false
+    }
+    
+    func tagFieldShouldBeginEditing(_ tagField: TagField) -> Bool {
+        print("shouldBeginEditing")
+        return true
+    }
+    
+    func tagFieldShouldEndEditing(_ tagField: TagField) -> Bool {
+        print("shouldEndEditing")
+        return true
+    }
+}

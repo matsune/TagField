@@ -20,7 +20,7 @@ public protocol TagFieldDelegate: class {
     func tagFieldShouldBeginEditing(_ tagField: TagField) -> Bool
 }
 
-extension TagFieldDelegate {
+public extension TagFieldDelegate {
     
     func tagField(_ tagField: TagField, didSelect tag: String?) {}
     
