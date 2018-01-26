@@ -26,8 +26,6 @@ open class TagField: UIScrollView {
     
     open var allowMultipleSelection = false
     
-    open var numberOfLines = 1
-    
     open var padding: UIEdgeInsets = .zero {
         didSet {
             setNeedsLayout()
@@ -42,6 +40,8 @@ open class TagField: UIScrollView {
             textField.isEnabled = !isReadonly
         }
     }
+    
+    public private(set) var numberOfLines = 1
     
     private var intrinsicContentHeight: CGFloat = 50
     
@@ -273,6 +273,87 @@ open class TagField: UIScrollView {
         repositionSubviews()
     }
 }
+
+// MARK: - TextField Properties
+extension TagField {
+    public var keyboardType: UIKeyboardType {
+        get {
+            return textField.keyboardType
+        }
+        set {
+            textField.keyboardType = newValue
+        }
+    }
+    
+    public var returnKeyType: UIReturnKeyType {
+        get {
+            return textField.returnKeyType
+        }
+        set {
+            textField.returnKeyType = newValue
+        }
+    }
+    
+    public var spellCheckingType: UITextSpellCheckingType {
+        get {
+            return textField.spellCheckingType
+        }
+        set {
+            textField.spellCheckingType = newValue
+        }
+    }
+    
+    public var autocapitalizationType: UITextAutocapitalizationType {
+        get {
+            return textField.autocapitalizationType
+        }
+        set {
+            textField.autocapitalizationType = newValue
+        }
+    }
+    
+    public var autocorrectionType: UITextAutocorrectionType {
+        get {
+            return textField.autocorrectionType
+        }
+        set {
+            textField.autocorrectionType = newValue
+        }
+    }
+    
+    public var enablesReturnKeyAutomatically: Bool {
+        get {
+            return textField.enablesReturnKeyAutomatically
+        }
+        set {
+            textField.enablesReturnKeyAutomatically = newValue
+        }
+    }
+    
+    public var text: String? {
+        get {
+            return textField.text
+        }
+        set {
+            textField.text = newValue
+        }
+    }
+    
+    @available(iOS, unavailable)
+    override open var inputAccessoryView: UIView? {
+        return super.inputAccessoryView
+    }
+    
+    open var inputFieldAccessoryView: UIView? {
+        get {
+            return textField.inputAccessoryView
+        }
+        set {
+            textField.inputAccessoryView = newValue
+        }
+    }
+}
+
 
 extension TagField: UITextFieldDelegate {
     // MARK: - UITextFieldDelegate
