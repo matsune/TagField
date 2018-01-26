@@ -26,6 +26,8 @@ open class TagField: UIScrollView {
     
     open var allowMultipleSelection = false
     
+    open var textFieldMinWidth: CGFloat = 20
+    
     open var padding: UIEdgeInsets = .zero {
         didSet {
             setNeedsLayout()
@@ -44,6 +46,13 @@ open class TagField: UIScrollView {
     public private(set) var numberOfLines = 1
     
     private var intrinsicContentHeight: CGFloat = 50
+    
+    open var font: UIFont? {
+        didSet {
+            textField.font = font
+            tagLabels.forEach { $0.font = font }
+        }
+    }
     
     // MARK: - TagLabel properties
     open var tagPadding: UIEdgeInsets = .zero {
@@ -83,15 +92,6 @@ open class TagField: UIScrollView {
     }
     
     // MARK: - Computed properties
-    open var font: UIFont? {
-        set {
-            textField.font = newValue
-            tagLabels.forEach { $0.font = newValue }
-        }
-        get {
-            return textField.font
-        }
-    }
     
     private var selectedTagLabels: [TagLabel] {
         return tagLabels.filter { $0.isSelected }
@@ -112,6 +112,10 @@ open class TagField: UIScrollView {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TagField.handleTap(_:)))
         addGestureRecognizer(tapGesture)
         
+        textField.contentHorizontalAlignment = .right
+        textField.autocorrectionType = .no
+        textField.autocapitalizationType = .none
+        textField.spellCheckingType = .no
         textField.delegate = self
         textField.onDeleteBackward = onDeleteBackward
         addSubview(textField)
@@ -170,6 +174,7 @@ open class TagField: UIScrollView {
         tagLabel.selectedBackgroundColor = tagSelectedBackgroundColor
         tagLabel.cornerRadius = tagCornerRadius
         tagLabel.padding = tagPadding
+        tagLabel.font = font
         tagLabel.text = text
         tagLabel.onTap = onTapTagLabel(_:)
         return tagLabel
@@ -209,22 +214,25 @@ open class TagField: UIScrollView {
             maxHeightOfLine = max(maxHeightOfLine, tagSize.height)
         }
         
-        let textFieldMinWidth: CGFloat = 20
-        let spaceWidth = (fullWidth - x)
-        let h = (textField.font?.pointSize ?? 15) + 3
-        if spaceWidth < textFieldMinWidth {
+        let availableWidth = (fullWidth - x)
+        if availableWidth < textFieldMinWidth {
             // textField start next line
             x = padding.left
             y += maxHeightOfLine + lineBetweenSpace
-            textField.frame = CGRect(x: x, y: y, width: fullWidth, height: h)
+            textField.sizeToFit()
+            textField.frame.size.width = fullWidth
         } else {
-            textField.frame = CGRect(x: x, y: y, width: spaceWidth, height: h)
+            textField.frame.size = CGSize(width: availableWidth, height: maxHeightOfLine)
         }
-        intrinsicContentHeight = y + h - padding.top
+        textField.frame.origin = CGPoint(x: x, y: y)
+        intrinsicContentHeight = y + textField.frame.height - padding.top
         invalidateIntrinsicContentSize()
         
         contentSize = CGSize(width: bounds.width, height: intrinsicContentHeight + padding.top + padding.bottom)
-        scrollRectToVisible(textField.frame, animated: false)
+        
+        if isScrollEnabled {
+            scrollRectToVisible(textField.frame, animated: false)
+        }
     }
     
     private func onTapTagLabel(_ tagLabel: TagLabel) {
@@ -359,7 +367,9 @@ extension TagField: UITextFieldDelegate {
     // MARK: - UITextFieldDelegate
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         clearAllSelection(animated: true)
-        scrollRectToVisible(textField.frame, animated: true)
+        if isScrollEnabled {
+            scrollRectToVisible(textField.frame, animated: true)
+        }
         
         if string == delimiter {
             tokenizeTextField()

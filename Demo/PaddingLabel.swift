@@ -13,7 +13,7 @@ open class PaddingLabel: UILabel {
     
     open var padding = UIEdgeInsets.zero {
         didSet {
-            setNeedsLayout()
+            setNeedsDisplay()
         }
     }
     
