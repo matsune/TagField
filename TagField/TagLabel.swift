@@ -11,41 +11,43 @@ import UIKit
 
 open class TagLabel: PaddingLabel {
     
-    internal var onTap: ((TagLabel) -> Void)?
+    var onTap: ((TagLabel) -> Void)?
     
     public private(set) var isSelected = false
     
-    open var normalTextColor: UIColor = .black {
+    open var animationDuration: TimeInterval = 0.4
+    
+    public var normalTextColor: UIColor = .black {
         didSet {
-            updateContent(animated: false)
+            updateView(animated: false)
         }
     }
     
-    open var normalBackgroundColor: UIColor = .orange {
+    public var normalBackgroundColor: UIColor = .orange {
         didSet {
-            updateContent(animated: false)
+            updateView(animated: false)
         }
     }
     
-    open var selectedTextColor: UIColor = .white {
+    public var selectedTextColor: UIColor = .white {
         didSet {
-            updateContent(animated: false)
+            updateView(animated: false)
         }
     }
     
-    open var selectedBackgroundColor: UIColor = .orange {
+    public var selectedBackgroundColor: UIColor = .orange {
         didSet {
-            updateContent(animated: false)
+            updateView(animated: false)
         }
     }
     
-    open var cornerRadius: CGFloat = 3 {
+    public var cornerRadius: CGFloat = 3 {
         didSet {
             setNeedsLayout()
         }
     }
-    
-    override init(frame: CGRect) {
+        
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
@@ -56,6 +58,7 @@ open class TagLabel: PaddingLabel {
     }
     
     private func setup() {
+        layer.masksToBounds = false
         textAlignment = .center
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TagLabel.handleTap(_:)))
         addGestureRecognizer(tapGesture)
@@ -68,25 +71,35 @@ open class TagLabel: PaddingLabel {
     
     public func setSelected(_ selected: Bool, animated: Bool) {
         isSelected = selected
-        updateContent(animated: animated)
+        updateView(animated: animated)
     }
     
-    private func updateContent(animated: Bool) {
-        let updateColor = {
-            if self.isSelected {
-                self.backgroundColor = self.selectedBackgroundColor
-                self.textColor = self.selectedTextColor
-            } else {
-                self.backgroundColor = self.normalBackgroundColor
-                self.textColor = self.normalTextColor
-            }
-        }
-        
-        if animated {
-            UIView.transition(with: self, duration: 0.2, options: .transitionCrossDissolve, animations: updateColor, completion: nil)
+    public func updateContent() {
+        if isSelected {
+            self.backgroundColor = self.selectedBackgroundColor
+            self.textColor = self.selectedTextColor
+            selectedAnimation()
         } else {
-            updateColor()
+            self.backgroundColor = self.normalBackgroundColor
+            self.textColor = self.normalTextColor
+            deselectedAnimation()
         }
+    }
+    
+    open func selectedAnimation() {
+        
+    }
+    
+    open func deselectedAnimation() {
+        
+    }
+    
+    private func updateView(animated: Bool) {
+        let duration = animated ? animationDuration : 0.0
+        UIView.transition(with: self,
+                          duration: duration,
+                          options: .transitionCrossDissolve,
+                          animations: updateContent, completion: nil)
     }
     
     open override func layoutSubviews() {

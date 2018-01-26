@@ -70,6 +70,8 @@ open class TagField: UIScrollView {
         }
     }
     
+    private var TagLabelClassType = TagLabel.self
+    
     // MARK: - TagLabel properties
     open var tagPadding = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8) {
         didSet {
@@ -179,6 +181,10 @@ open class TagField: UIScrollView {
         }
     }
     
+    public func registerClass(_ classType: TagLabel.Type) {
+        self.TagLabelClassType = classType
+    }
+    
     // MARK: - Private methods
     @objc
     private func handleTap(_ recognizer: UITapGestureRecognizer) {
@@ -189,7 +195,7 @@ open class TagField: UIScrollView {
     }
     
     private func createTagLabel(text: String) -> TagLabel {
-        let tagLabel = TagLabel()
+        let tagLabel = TagLabelClassType.init()
         tagLabel.isUserInteractionEnabled = true
         tagLabel.normalTextColor = tagTextColor
         tagLabel.normalBackgroundColor = tagBackgroundColor

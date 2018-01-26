@@ -11,6 +11,14 @@ import UIKit
 
 open class PaddingLabel: UILabel {
     
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     open var padding = UIEdgeInsets.zero {
         didSet {
             setNeedsDisplay()
