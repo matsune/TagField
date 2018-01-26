@@ -15,7 +15,7 @@ open class TagField: UIScrollView {
     
     private var tagLabels: [TagLabel] = []
     
-    private let textField = BackspaceDetectTextField()
+    private let textField = TagFieldContentTextField()
     
     // MARK: - Stored properties
     open var delimiter: String?
@@ -46,6 +46,12 @@ open class TagField: UIScrollView {
     public private(set) var numberOfLines = 1
     
     private var intrinsicContentHeight: CGFloat = 50
+    
+    private var isHiddenCaret = false {
+        didSet {
+            textField.isHiddenCaret = isHiddenCaret
+        }
+    }
     
     open var font: UIFont? {
         didSet {
@@ -128,6 +134,7 @@ open class TagField: UIScrollView {
         textField.autocapitalizationType = .none
         textField.spellCheckingType = .no
         textField.delegate = self
+        textField.onTap = onTapTextField
         textField.onDeleteBackward = onDeleteBackward
         addSubview(textField)
     }
@@ -251,13 +258,23 @@ open class TagField: UIScrollView {
             tagDelegate?.tagField(self, didSelect: tagLabel.text)
             return
         }
-        
+        // show keyboard
         textField.becomeFirstResponder()
+        // hide carret
+        isHiddenCaret = true
+        
         if !allowMultipleSelection {
+            // deselect if allowMultipleSelection is false
             selectedTagLabels.forEach { $0.setSelected(false, animated: true) }
         }
         tagLabel.setSelected(true, animated: true)
         tagDelegate?.tagField(self, didSelect: tagLabel.text)
+    }
+    
+    private func onTapTextField() {
+        clearAllSelection(animated: true)
+        isHiddenCaret = false
+        textField.becomeFirstResponder()
     }
     
     private func clearTextField() {
@@ -273,13 +290,16 @@ open class TagField: UIScrollView {
     private func onDeleteBackward() {
         let selectedLabels = selectedTagLabels
         if !selectedLabels.isEmpty {
+            // delete selected tags
             selectedLabels.forEach {
                 deleteTagLabel($0)
             }
             return
         }
         
-        if textField.text?.isEmpty ?? false {
+        if let text = textField.text, text.isEmpty {
+            // select last tag if textField is empty
+            isHiddenCaret = true
             tagLabels.last?.setSelected(true, animated: true)
         }
     }
@@ -377,6 +397,10 @@ extension TagField {
 extension TagField: UITextFieldDelegate {
     // MARK: - UITextFieldDelegate
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard !isHiddenCaret else {
+            return false
+        }
+        
         clearAllSelection(animated: true)
         if isScrollEnabled {
             scrollRectToVisible(textField.frame, animated: true)
@@ -390,6 +414,10 @@ extension TagField: UITextFieldDelegate {
     }
     
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        guard !isHiddenCaret else {
+            return false
+        }
+        
         tokenizeTextField()
         return tagDelegate?.tagFieldShouldReturn(self) ?? true
     }
@@ -415,6 +443,9 @@ extension TagField: UITextFieldDelegate {
     }
     
     public func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        guard !isHiddenCaret else {
+            return false
+        }
         return tagDelegate?.tagFieldShouldClear(self) ?? false
     }
     
@@ -423,6 +454,9 @@ extension TagField: UITextFieldDelegate {
     }
     
     public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        guard !isHiddenCaret else {
+            return false
+        }
         return tagDelegate?.tagFieldShouldBeginEditing(self) ?? true
     }
 }

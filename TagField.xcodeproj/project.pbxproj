@@ -16,7 +16,7 @@
 		13F0DA33201AE2B9005AB54A /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B60D201A20E100AFDCA5 /* PaddingLabel.swift */; };
 		13F0DA34201AE2B9005AB54A /* TagFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B611201A213600AFDCA5 /* TagFieldDelegate.swift */; };
 		13F0DA35201AE2B9005AB54A /* TagLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B60B201A20C700AFDCA5 /* TagLabel.swift */; };
-		13F0DA36201AE2B9005AB54A /* BackspaceDetectTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B613201A399E00AFDCA5 /* BackspaceDetectTextField.swift */; };
+		13F0DA36201AE2B9005AB54A /* TagFieldContentTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B613201A399E00AFDCA5 /* TagFieldContentTextField.swift */; };
 		13F0DA37201AE2B9005AB54A /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B60F201A210900AFDCA5 /* TagField.swift */; };
 		13F0DA38201AE2EA005AB54A /* TagField.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B01E392019C56700FF0664 /* TagField.framework */; };
 		13F0DA39201AE2EA005AB54A /* TagField.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 13B01E392019C56700FF0664 /* TagField.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -51,7 +51,7 @@
 		1306B60D201A20E100AFDCA5 /* PaddingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingLabel.swift; sourceTree = "<group>"; };
 		1306B60F201A210900AFDCA5 /* TagField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagField.swift; sourceTree = "<group>"; };
 		1306B611201A213600AFDCA5 /* TagFieldDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFieldDelegate.swift; sourceTree = "<group>"; };
-		1306B613201A399E00AFDCA5 /* BackspaceDetectTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackspaceDetectTextField.swift; sourceTree = "<group>"; };
+		1306B613201A399E00AFDCA5 /* TagFieldContentTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagFieldContentTextField.swift; sourceTree = "<group>"; };
 		13B01E392019C56700FF0664 /* TagField.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TagField.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B01E3C2019C56700FF0664 /* TagField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TagField.h; sourceTree = "<group>"; };
 		13B01E3D2019C56700FF0664 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -106,7 +106,7 @@
 			children = (
 				13B01E3C2019C56700FF0664 /* TagField.h */,
 				13B01E3D2019C56700FF0664 /* Info.plist */,
-				1306B613201A399E00AFDCA5 /* BackspaceDetectTextField.swift */,
+				1306B613201A399E00AFDCA5 /* TagFieldContentTextField.swift */,
 				1306B60D201A20E100AFDCA5 /* PaddingLabel.swift */,
 				1306B60F201A210900AFDCA5 /* TagField.swift */,
 				1306B611201A213600AFDCA5 /* TagFieldDelegate.swift */,
@@ -243,7 +243,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13F0DA36201AE2B9005AB54A /* BackspaceDetectTextField.swift in Sources */,
+				13F0DA36201AE2B9005AB54A /* TagFieldContentTextField.swift in Sources */,
 				13F0DA35201AE2B9005AB54A /* TagLabel.swift in Sources */,
 				13F0DA34201AE2B9005AB54A /* TagFieldDelegate.swift in Sources */,
 				13F0DA37201AE2B9005AB54A /* TagField.swift in Sources */,
