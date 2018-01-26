@@ -54,6 +54,15 @@ open class TagField: UIScrollView {
         }
     }
     
+    open var placeholder: String? {
+        set {
+            textField.placeholder = newValue
+        }
+        get {
+            return textField.placeholder
+        }
+    }
+    
     // MARK: - TagLabel properties
     open var tagPadding = UIEdgeInsets(top: 2, left: 5, bottom: 2, right: 5) {
         didSet {

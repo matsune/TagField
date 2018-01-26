@@ -18,9 +18,7 @@ final class ViewController: UIViewController {
         view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
         
         tagField.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 200)
-//        tagField.padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-//        tagField.tagPadding = UIEdgeInsets(top: 5, left: 8, bottom: 8, right: 10)
-//        tagField.tagBackgroundColor = .blue
+        tagField.placeholder = "add tag..."
         
         view.addSubview(tagField)
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(ViewController.didTapView(recognizer:))))
