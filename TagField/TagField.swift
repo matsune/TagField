@@ -13,7 +13,7 @@ open class TagField: UIScrollView {
     
     weak open var tagDelegate: TagFieldDelegate?
     
-    private var tagLabels: [TagLabel] = []
+    private var tagViews: [TagView] = []
     
     private let textField = TagFieldContentTextField()
     
@@ -57,7 +57,7 @@ open class TagField: UIScrollView {
     open var font: UIFont? {
         didSet {
             textField.font = font
-            tagLabels.forEach { $0.font = font }
+            tagViews.forEach { $0.label.font = font }
         }
     }
     
@@ -75,44 +75,44 @@ open class TagField: UIScrollView {
     // MARK: - TagLabel properties
     open var tagPadding = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8) {
         didSet {
-            tagLabels.forEach { $0.padding = tagPadding }
+            tagViews.forEach { $0.label.padding = tagPadding }
         }
     }
     
     open var tagTextColor: UIColor = .white {
         didSet {
-            tagLabels.forEach { $0.normalTextColor = tagTextColor }
+            tagViews.forEach { $0.label.normalTextColor = tagTextColor }
         }
     }
     
     open var tagBackgroundColor: UIColor = .orange {
         didSet {
-            tagLabels.forEach { $0.normalBackgroundColor = tagBackgroundColor }
+            tagViews.forEach { $0.label.normalBackgroundColor = tagBackgroundColor }
         }
     }
     
     open var tagSelectedTextColor: UIColor = .white {
         didSet {
-            tagLabels.forEach { $0.selectedTextColor = tagSelectedTextColor }
+            tagViews.forEach { $0.label.selectedTextColor = tagSelectedTextColor }
         }
     }
     
     open var tagSelectedBackgroundColor: UIColor = .red {
         didSet {
-            tagLabels.forEach { $0.selectedBackgroundColor = tagSelectedBackgroundColor }
+            tagViews.forEach { $0.label.selectedBackgroundColor = tagSelectedBackgroundColor }
         }
     }
     
     open var tagCornerRadius: CGFloat = 8.0 {
         didSet {
-            tagLabels.forEach { $0.cornerRadius = tagCornerRadius }
+            tagViews.forEach { $0.label.cornerRadius = tagCornerRadius }
         }
     }
     
     // MARK: - Computed properties
     
-    private var selectedTagLabels: [TagLabel] {
-        return tagLabels.filter { $0.isSelected }
+    private var selectedTagViews: [TagView] {
+        return tagViews.filter { $0.label.isSelected }
     }
     
     // MARK: - Initializer
@@ -164,20 +164,20 @@ open class TagField: UIScrollView {
     
     // MARK: - Public methods
     public func addTag(text: String) {
-        if tagLabels.contains(where: {$0.text == text}) {
+        if tagViews.contains(where: {$0.label.text == text}) {
             clearTextField()
             return
         }
         
-        let tagLabel = createTagLabel(text: text)
-        addSubview(tagLabel)
-        tagLabels.append(tagLabel)
+        let tagView = createTagView(text: text)
+        addSubview(tagView)
+        tagViews.append(tagView)
         repositionSubviews()
     }
     
     public func deleteTag(text: String) {
-        if let tagLabel = tagLabels.first(where: {$0.text == text}) {
-            deleteTagLabel(tagLabel)
+        if let tagView = tagViews.first(where: {$0.label.text == text}) {
+            deleteTagView(tagView)
         }
     }
     
@@ -194,7 +194,7 @@ open class TagField: UIScrollView {
         }
     }
     
-    private func createTagLabel(text: String) -> TagLabel {
+    private func createTagView(text: String) -> TagView {
         let tagLabel = TagLabelClassType.init()
         tagLabel.isUserInteractionEnabled = true
         tagLabel.normalTextColor = tagTextColor
@@ -206,7 +206,7 @@ open class TagField: UIScrollView {
         tagLabel.font = font
         tagLabel.text = text
         tagLabel.onTap = onTapTagLabel(_:)
-        return tagLabel
+        return TagView(label: tagLabel)
     }
     
     private func repositionSubviews() {
@@ -218,8 +218,8 @@ open class TagField: UIScrollView {
         
         // - tagLabels position
         
-        for tagLabel in tagLabels {
-            let tagSize = tagLabel.intrinsicContentSize
+        for tagView in tagViews {
+            let tagSize = tagView.label.intrinsicContentSize
             var availableWidth = bounds.width - x - (padding.right + sideInset.right)
             
             if tagSize.width > availableWidth {
@@ -238,14 +238,12 @@ open class TagField: UIScrollView {
                 
                 if tagSize.width > availableWidth {
                     // clipping
-                    tagLabel.frame = CGRect(x: x, y: y, width: availableWidth, height: tagSize.height)
+                    tagView.frame = CGRect(x: x, y: y, width: availableWidth, height: tagSize.height)
                 } else {
-                    tagLabel.sizeToFit()
-                    tagLabel.frame.origin = CGPoint(x: x, y: y)
+                    tagView.frame = CGRect(origin: CGPoint(x: x, y: y), size: tagSize)
                 }
             } else {
-                tagLabel.sizeToFit()
-                tagLabel.frame.origin = CGPoint(x: x, y: y)
+                tagView.frame = CGRect(origin: CGPoint(x: x, y: y), size: tagSize)
             }
             x += tagSize.width + tagBetweenSpace
             lastTagViewHeight = tagSize.height
@@ -293,7 +291,7 @@ open class TagField: UIScrollView {
         
         if !allowMultipleSelection {
             // deselect if allowMultipleSelection is false
-            selectedTagLabels.forEach { $0.setSelected(false, animated: true) }
+            selectedTagViews.forEach { $0.label.setSelected(false, animated: true) }
         }
         tagLabel.setSelected(true, animated: true)
 
@@ -316,32 +314,32 @@ open class TagField: UIScrollView {
     }
     
     private func deselectAllTags(animated: Bool) {
-        tagLabels
-            .filter { $0.isSelected }
-            .forEach { $0.setSelected(false, animated: true) }
+        tagViews
+            .filter { $0.label.isSelected }
+            .forEach { $0.label.setSelected(false, animated: true) }
     }
     
     private func onDeleteBackward() {
-        let selectedLabels = selectedTagLabels
-        if !selectedLabels.isEmpty {
+        let selectedViews = selectedTagViews
+        if !selectedViews.isEmpty {
             // delete selected tags
-            selectedLabels.forEach {
-                deleteTagLabel($0)
+            selectedTagViews.forEach {
+                deleteTagView($0)
             }
             return
         }
         
-        if let text = textField.text, text.isEmpty && !tagLabels.isEmpty {
+        if let text = textField.text, text.isEmpty && !tagViews.isEmpty {
             // select last tag if textField is empty
             isHiddenCaret = true
-            tagLabels.last?.setSelected(true, animated: true)
+            tagViews.last?.label.setSelected(true, animated: true)
         }
     }
     
-    private func deleteTagLabel(_ tagLabel: TagLabel) {
-        tagLabel.removeFromSuperview()
-        if let index = tagLabels.index(of: tagLabel) {
-            tagLabels.remove(at: index)
+    private func deleteTagView(_ tagView: TagView) {
+        tagView.removeFromSuperview()
+        if let index = tagViews.index(of: tagView) {
+            tagViews.remove(at: index)
         }
         repositionSubviews()
     }

@@ -20,6 +20,7 @@
 		13F0DA37201AE2B9005AB54A /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B60F201A210900AFDCA5 /* TagField.swift */; };
 		13F0DA38201AE2EA005AB54A /* TagField.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B01E392019C56700FF0664 /* TagField.framework */; };
 		13F0DA39201AE2EA005AB54A /* TagField.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 13B01E392019C56700FF0664 /* TagField.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		13F0DA41201B52AA005AB54A /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13F0DA40201B52AA005AB54A /* TagView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		13B01E512019C5C800FF0664 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		13B01E542019C5C800FF0664 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		13B01E562019C5C800FF0664 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		13F0DA40201B52AA005AB54A /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 				1306B60F201A210900AFDCA5 /* TagField.swift */,
 				1306B611201A213600AFDCA5 /* TagFieldDelegate.swift */,
 				1306B60B201A20C700AFDCA5 /* TagLabel.swift */,
+				13F0DA40201B52AA005AB54A /* TagView.swift */,
 			);
 			path = TagField;
 			sourceTree = "<group>";
@@ -248,6 +251,7 @@
 				13F0DA34201AE2B9005AB54A /* TagFieldDelegate.swift in Sources */,
 				13F0DA37201AE2B9005AB54A /* TagField.swift in Sources */,
 				13F0DA33201AE2B9005AB54A /* PaddingLabel.swift in Sources */,
+				13F0DA41201B52AA005AB54A /* TagView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
