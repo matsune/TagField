@@ -60,7 +60,6 @@ final class ViewController: UIViewController {
         tagField.padding.top = 8
         tagField.lineBetweenSpace = 8
         tagField.tagBetweenSpace = 5
-        tagField.allowMultipleSelection = true
         
         tagField.addTag(text: "tag1")
         tagField.addTag(text: "tag2")

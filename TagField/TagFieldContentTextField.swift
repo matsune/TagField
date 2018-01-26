@@ -14,6 +14,7 @@ final class TagFieldContentTextField: UITextField {
     var onDeleteBackward: (() -> Void)?
     var onTap: (() -> Void)?
     var isHiddenCaret = false
+    var isHiddenPlaceholder = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -45,5 +46,12 @@ final class TagFieldContentTextField: UITextField {
     @objc
     private func handleTap(_ recognizer: UITapGestureRecognizer) {
         onTap?()
+    }
+    
+    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+        if isHiddenPlaceholder {
+            return .zero
+        }
+        return super.placeholderRect(forBounds: bounds)
     }
 }

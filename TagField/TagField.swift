@@ -48,6 +48,7 @@ open class TagField: UIScrollView {
                 deselectAllTags(animated: true)
             }
             textField.isEnabled = !isReadonly
+            textField.isHiddenPlaceholder = isReadonly
         }
     }
     
