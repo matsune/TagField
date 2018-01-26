@@ -23,10 +23,9 @@ final class ViewController: UIViewController {
         sharpLabel.text = "♯"
         sharpLabel.font = UIFont.systemFont(ofSize: 24)
         tagField.addSubview(sharpLabel)
-        
+
         tagField.placeholder = "add tag..."
         tagField.tagDelegate = self
-        tagField.tagDataSource = self
         
         tagField.addTag(text: "tag1")
         tagField.addTag(text: "tag2")
@@ -85,9 +84,7 @@ extension ViewController: TagFieldDelegate {
         print("shouldEndEditing")
         return true
     }
-}
-
-extension ViewController: TagFieldDataSource {
+    
     func tagField(_ tagField: TagField, sideInsetAtLine line: Int) -> (left: CGFloat, right: CGFloat) {
         if line == 1 {
             return (30, 0)

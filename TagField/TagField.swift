@@ -34,6 +34,13 @@ open class TagField: UIScrollView {
         }
     }
     
+    open var font: UIFont? {
+        didSet {
+            textField.font = font
+            tagViews.forEach { $0.font = font }
+        }
+    }
+    
     open var isReadonly = false {
         didSet {
             if isReadonly {
@@ -54,65 +61,55 @@ open class TagField: UIScrollView {
         }
     }
     
-    open var font: UIFont? {
-        didSet {
-            textField.font = font
-            tagViews.forEach { $0.label.font = font }
-        }
-    }
-    
-    open var placeholder: String? {
-        set {
-            textField.placeholder = newValue
-        }
-        get {
-            return textField.placeholder
-        }
-    }
-    
-    private var TagLabelClassType = TagLabel.self
-    
-    // MARK: - TagLabel properties
+    // MARK: - TagView Properties
     open var tagPadding = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8) {
         didSet {
-            tagViews.forEach { $0.label.padding = tagPadding }
+            tagViews.forEach { $0.padding = tagPadding }
         }
     }
     
     open var tagTextColor: UIColor = .white {
         didSet {
-            tagViews.forEach { $0.label.normalTextColor = tagTextColor }
+            tagViews.forEach { $0.normalTextColor = tagTextColor }
         }
     }
     
     open var tagBackgroundColor: UIColor = .orange {
         didSet {
-            tagViews.forEach { $0.label.normalBackgroundColor = tagBackgroundColor }
+            tagViews.forEach { $0.normalBackgroundColor = tagBackgroundColor }
         }
     }
     
     open var tagSelectedTextColor: UIColor = .white {
         didSet {
-            tagViews.forEach { $0.label.selectedTextColor = tagSelectedTextColor }
+            tagViews.forEach { $0.selectedTextColor = tagSelectedTextColor }
         }
     }
     
     open var tagSelectedBackgroundColor: UIColor = .red {
         didSet {
-            tagViews.forEach { $0.label.selectedBackgroundColor = tagSelectedBackgroundColor }
+            tagViews.forEach { $0.selectedBackgroundColor = tagSelectedBackgroundColor }
         }
     }
     
     open var tagCornerRadius: CGFloat = 8.0 {
         didSet {
-            tagViews.forEach { $0.label.cornerRadius = tagCornerRadius }
+            tagViews.forEach { $0.cornerRadius = tagCornerRadius }
         }
     }
     
-    // MARK: - Computed properties
+    // MARK: - Computed Properties
+    override open var intrinsicContentSize: CGSize {
+        return CGSize(width: bounds.width - (padding.left + padding.right), height: intrinsicContentHeight)
+    }
     
     private var selectedTagViews: [TagView] {
-        return tagViews.filter { $0.label.isSelected }
+        return tagViews.filter { $0.isSelected }
+    }
+    
+    open var placeholder: String? {
+        set { textField.placeholder = newValue }
+        get { return textField.placeholder }
     }
     
     // MARK: - Initializer
@@ -143,11 +140,7 @@ open class TagField: UIScrollView {
         addSubview(textField)
     }
     
-    // MARK: - Override
-    override open var intrinsicContentSize: CGSize {
-        return CGSize(width: bounds.width - (padding.left + padding.right), height: intrinsicContentHeight)
-    }
-    
+    // MARK: - Public Methods
     @discardableResult
     open override func becomeFirstResponder() -> Bool {
         isHiddenCaret = false
@@ -162,9 +155,8 @@ open class TagField: UIScrollView {
         return textField.resignFirstResponder()
     }
     
-    // MARK: - Public methods
     public func addTag(text: String) {
-        if tagViews.contains(where: {$0.label.text == text}) {
+        if tagViews.contains(where: {$0.text == text}) {
             clearTextField()
             return
         }
@@ -176,13 +168,9 @@ open class TagField: UIScrollView {
     }
     
     public func deleteTag(text: String) {
-        if let tagView = tagViews.first(where: {$0.label.text == text}) {
+        if let tagView = tagViews.first(where: {$0.text == text}) {
             deleteTagView(tagView)
         }
-    }
-    
-    public func registerClass(_ classType: TagLabel.Type) {
-        self.TagLabelClassType = classType
     }
     
     // MARK: - Private methods
@@ -195,18 +183,18 @@ open class TagField: UIScrollView {
     }
     
     private func createTagView(text: String) -> TagView {
-        let tagLabel = TagLabelClassType.init()
-        tagLabel.isUserInteractionEnabled = true
-        tagLabel.normalTextColor = tagTextColor
-        tagLabel.normalBackgroundColor = tagBackgroundColor
-        tagLabel.selectedTextColor = tagSelectedTextColor
-        tagLabel.selectedBackgroundColor = tagSelectedBackgroundColor
-        tagLabel.cornerRadius = tagCornerRadius
-        tagLabel.padding = tagPadding
-        tagLabel.font = font
-        tagLabel.text = text
-        tagLabel.onTap = onTapTagLabel(_:)
-        return TagView(label: tagLabel)
+        let tagView = TagView(text: text)
+        tagView.normalTextColor = tagTextColor
+        tagView.normalBackgroundColor = tagBackgroundColor
+        tagView.selectedTextColor = tagSelectedTextColor
+        tagView.selectedBackgroundColor = tagSelectedBackgroundColor
+        tagView.cornerRadius = tagCornerRadius
+        tagView.padding = tagPadding
+        tagView.font = font
+        tagView.text = text
+        
+        tagView.onTap = onTapTagView
+        return tagView
     }
     
     private func repositionSubviews() {
@@ -219,7 +207,7 @@ open class TagField: UIScrollView {
         // - tagLabels position
         
         for tagView in tagViews {
-            let tagSize = tagView.label.intrinsicContentSize
+            let tagSize = tagView.intrinsicContentSize
             var availableWidth = bounds.width - x - (padding.right + sideInset.right)
             
             if tagSize.width > availableWidth {
@@ -279,9 +267,9 @@ open class TagField: UIScrollView {
         }
     }
     
-    private func onTapTagLabel(_ tagLabel: TagLabel) {
+    private func onTapTagView(_ tagView: TagView) {
         if isReadonly {
-            tagDelegate?.tagField(self, didSelect: tagLabel.text)
+            tagDelegate?.tagField(self, didSelect: tagView.text)
             return
         }
         
@@ -291,14 +279,14 @@ open class TagField: UIScrollView {
         
         if !allowMultipleSelection {
             // deselect if allowMultipleSelection is false
-            selectedTagViews.forEach { $0.label.setSelected(false, animated: true) }
+            selectedTagViews.forEach { $0.setSelected(false, animated: true) }
         }
-        tagLabel.setSelected(true, animated: true)
+        tagView.setSelected(true, animated: true)
 
         // scroll to selected label
-        scrollRectToVisible(tagLabel.frame, animated: true)
+        scrollRectToVisible(tagView.frame, animated: true)
 
-        tagDelegate?.tagField(self, didSelect: tagLabel.text)
+        tagDelegate?.tagField(self, didSelect: tagView.text)
     }
     
     private func onTapTextField() {
@@ -315,8 +303,8 @@ open class TagField: UIScrollView {
     
     private func deselectAllTags(animated: Bool) {
         tagViews
-            .filter { $0.label.isSelected }
-            .forEach { $0.label.setSelected(false, animated: true) }
+            .filter { $0.isSelected }
+            .forEach { $0.setSelected(false, animated: true) }
     }
     
     private func onDeleteBackward() {
@@ -332,7 +320,7 @@ open class TagField: UIScrollView {
         if let text = textField.text, text.isEmpty && !tagViews.isEmpty {
             // select last tag if textField is empty
             isHiddenCaret = true
-            tagViews.last?.label.setSelected(true, animated: true)
+            tagViews.last?.setSelected(true, animated: true)
         }
     }
     
@@ -348,66 +336,38 @@ open class TagField: UIScrollView {
 // MARK: - TextField Properties
 extension TagField {
     public var keyboardType: UIKeyboardType {
-        get {
-            return textField.keyboardType
-        }
-        set {
-            textField.keyboardType = newValue
-        }
+        set { textField.keyboardType = newValue }
+        get { return textField.keyboardType }
     }
     
     public var returnKeyType: UIReturnKeyType {
-        get {
-            return textField.returnKeyType
-        }
-        set {
-            textField.returnKeyType = newValue
-        }
+        set { textField.returnKeyType = newValue }
+        get { return textField.returnKeyType }
     }
     
     public var spellCheckingType: UITextSpellCheckingType {
-        get {
-            return textField.spellCheckingType
-        }
-        set {
-            textField.spellCheckingType = newValue
-        }
+        set { textField.spellCheckingType = newValue }
+        get { return textField.spellCheckingType }
     }
     
     public var autocapitalizationType: UITextAutocapitalizationType {
-        get {
-            return textField.autocapitalizationType
-        }
-        set {
-            textField.autocapitalizationType = newValue
-        }
+        set { textField.autocapitalizationType = newValue }
+        get { return textField.autocapitalizationType }
     }
     
     public var autocorrectionType: UITextAutocorrectionType {
-        get {
-            return textField.autocorrectionType
-        }
-        set {
-            textField.autocorrectionType = newValue
-        }
+        set { textField.autocorrectionType = newValue }
+        get { return textField.autocorrectionType }
     }
     
     public var enablesReturnKeyAutomatically: Bool {
-        get {
-            return textField.enablesReturnKeyAutomatically
-        }
-        set {
-            textField.enablesReturnKeyAutomatically = newValue
-        }
+        set { textField.enablesReturnKeyAutomatically = newValue }
+        get { return textField.enablesReturnKeyAutomatically }
     }
     
     public var text: String? {
-        get {
-            return textField.text
-        }
-        set {
-            textField.text = newValue
-        }
+        set { textField.text = newValue }
+        get { return textField.text }
     }
     
     @available(iOS, unavailable)
@@ -416,12 +376,8 @@ extension TagField {
     }
     
     open var inputFieldAccessoryView: UIView? {
-        get {
-            return textField.inputAccessoryView
-        }
-        set {
-            textField.inputAccessoryView = newValue
-        }
+        set { textField.inputAccessoryView = newValue }
+        get { return textField.inputAccessoryView }
     }
 }
 
