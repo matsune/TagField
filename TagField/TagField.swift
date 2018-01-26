@@ -36,8 +36,9 @@ open class TagField: UIScrollView {
     
     open var isReadonly = false {
         didSet {
-            if !oldValue {
+            if isReadonly {
                 textField.resignFirstResponder()
+                deselectAllTags(animated: true)
             }
             textField.isEnabled = !isReadonly
         }
@@ -151,7 +152,7 @@ open class TagField: UIScrollView {
     
     @discardableResult
     open override func resignFirstResponder() -> Bool {
-        clearAllSelection(animated: true)
+        deselectAllTags(animated: true)
         tokenizeTextField()
         return textField.resignFirstResponder()
     }
@@ -179,7 +180,9 @@ open class TagField: UIScrollView {
     @objc
     private func handleTap(_ recognizer: UITapGestureRecognizer) {
         if !isReadonly {
-            textField.becomeFirstResponder()
+            deselectAllTags(animated: true)
+            becomeFirstResponder()
+            isHiddenCaret = false
         }
     }
     
@@ -259,7 +262,7 @@ open class TagField: UIScrollView {
             return
         }
         // show keyboard
-        textField.becomeFirstResponder()
+        becomeFirstResponder()
         // hide carret
         isHiddenCaret = true
         
@@ -272,16 +275,18 @@ open class TagField: UIScrollView {
     }
     
     private func onTapTextField() {
-        clearAllSelection(animated: true)
-        isHiddenCaret = false
-        textField.becomeFirstResponder()
+        if !isReadonly {
+            deselectAllTags(animated: true)
+            becomeFirstResponder()
+            isHiddenCaret = false
+        }
     }
     
     private func clearTextField() {
         textField.text = nil
     }
     
-    private func clearAllSelection(animated: Bool) {
+    private func deselectAllTags(animated: Bool) {
         tagLabels
             .filter { $0.isSelected }
             .forEach { $0.setSelected(false, animated: true) }
@@ -401,7 +406,7 @@ extension TagField: UITextFieldDelegate {
             return false
         }
         
-        clearAllSelection(animated: true)
+        deselectAllTags(animated: true)
         if isScrollEnabled {
             scrollRectToVisible(textField.frame, animated: true)
         }
@@ -430,7 +435,7 @@ extension TagField: UITextFieldDelegate {
     }
     
     public func textFieldDidBeginEditing(_ textField: UITextField) {
-        clearAllSelection(animated: true)
+        deselectAllTags(animated: true)
         tagDelegate?.tagFieldDidBeginEditing(self)
     }
     

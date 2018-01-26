@@ -17,10 +17,46 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hdt-5B-K3s" customClass="TagField" customModule="TagField">
+                                <rect key="frame" x="0.0" y="64" width="375" height="300"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="300" id="OBA-av-L3u"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="readOnly" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Whg-ha-xS4">
+                                <rect key="frame" x="10" y="374" width="100" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="lAZ-kA-ymE"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="1Al-eW-3Je">
+                                <rect key="frame" x="120" y="369" width="51" height="31"/>
+                                <connections>
+                                    <action selector="readOnlyValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="Ghz-rP-ayx"/>
+                                </connections>
+                            </switch>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="hdt-5B-K3s" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="AXD-8w-K6t"/>
+                            <constraint firstItem="1Al-eW-3Je" firstAttribute="leading" secondItem="Whg-ha-xS4" secondAttribute="trailing" constant="10" id="DRi-8c-gkf"/>
+                            <constraint firstItem="1Al-eW-3Je" firstAttribute="centerY" secondItem="Whg-ha-xS4" secondAttribute="centerY" id="Fbh-VY-5h1"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="hdt-5B-K3s" secondAttribute="trailing" id="S6l-lQ-tZ9"/>
+                            <constraint firstItem="Whg-ha-xS4" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="Zve-g5-dEX"/>
+                            <constraint firstItem="Whg-ha-xS4" firstAttribute="top" secondItem="hdt-5B-K3s" secondAttribute="bottom" constant="10" id="rPH-pN-9qb"/>
+                            <constraint firstItem="hdt-5B-K3s" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="zrR-9t-eTF"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="BUM-3M-JFB"/>
+                    <connections>
+                        <outlet property="tagField" destination="hdt-5B-K3s" id="OmE-ED-70W"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

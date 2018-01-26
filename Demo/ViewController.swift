@@ -11,19 +11,16 @@ import TagField
 
 final class ViewController: UIViewController {
 
-    let tagField = TagField()
+    @IBOutlet weak var tagField: TagField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(ViewController.didTapView(recognizer:))))
         
-        tagField.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 200)
         tagField.placeholder = "add tag..."
         tagField.tagDelegate = self
         tagField.tintColor = UIColor.green
-        
-        view.addSubview(tagField)
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(ViewController.didTapView(recognizer:))))
         
         tagField.addTag(text: "tag1")
         tagField.addTag(text: "tag2")
@@ -39,6 +36,10 @@ final class ViewController: UIViewController {
     @objc
     func didTapView(recognizer: UITapGestureRecognizer) {
         tagField.resignFirstResponder()
+    }
+    
+    @IBAction func readOnlyValueChanged(_ sender: UISwitch) {
+        tagField.isReadonly = sender.isOn
     }
 }
 
