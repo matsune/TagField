@@ -61,19 +61,6 @@ open class TagLabel: PaddingLabel {
         addGestureRecognizer(tapGesture)
     }
     
-    open override var intrinsicContentSize: CGSize {
-        return CGSize(width: super.intrinsicContentSize.width + (padding.left + padding.right),
-                      height: super.intrinsicContentSize.height + (padding.top + padding.bottom))
-    }
-    
-    open override func sizeThatFits(_ size: CGSize) -> CGSize {
-        let fittingSize = CGSize(width: size.width - (padding.left + padding.right),
-                                 height: size.height - (padding.top + padding.bottom))
-        let labelSize = super.sizeThatFits(fittingSize)
-        return CGSize(width: labelSize.width + (padding.left + padding.right),
-                      height: labelSize.height + (padding.top + padding.bottom))
-    }
-    
     @objc
     private func handleTap(_ recognizer: UITapGestureRecognizer) {
         onTap?(self)

@@ -26,14 +26,7 @@ open class PaddingLabel: UILabel {
         var intrinsicContentSize = super.intrinsicContentSize
         intrinsicContentSize.width += (padding.left + padding.right)
         intrinsicContentSize.height += (padding.top + padding.bottom)
-        intrinsicContentSize.height += fontDescent
         return intrinsicContentSize
-    }
-    
-    private var fontDescent: CGFloat {
-        let f = CTFontCreateWithName(font.fontName as CFString, font.pointSize, nil)
-        let descentHeight = ceilf(Float(CTFontGetDescent(f)))
-        return CGFloat(descentHeight)
     }
     
     open override func sizeThatFits(_ size: CGSize) -> CGSize {

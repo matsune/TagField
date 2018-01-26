@@ -17,7 +17,7 @@ final class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(ViewController.didTapView(recognizer:))))
-        
+
         tagField.placeholder = "add tag..."
         tagField.tagDelegate = self
         tagField.tintColor = UIColor.green

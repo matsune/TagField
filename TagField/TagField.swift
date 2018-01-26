@@ -48,7 +48,7 @@ open class TagField: UIScrollView {
     
     private var intrinsicContentHeight: CGFloat = 50
     
-    private var isHiddenCaret = false {
+    private var isHiddenCaret = true {
         didSet {
             textField.isHiddenCaret = isHiddenCaret
         }
@@ -71,7 +71,7 @@ open class TagField: UIScrollView {
     }
     
     // MARK: - TagLabel properties
-    open var tagPadding = UIEdgeInsets(top: 2, left: 5, bottom: 2, right: 5) {
+    open var tagPadding = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8) {
         didSet {
             tagLabels.forEach { $0.padding = tagPadding }
         }
@@ -125,11 +125,12 @@ open class TagField: UIScrollView {
     }
     
     private func setup() {
+        layer.masksToBounds = true
         backgroundColor = .white
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TagField.handleTap(_:)))
         addGestureRecognizer(tapGesture)
-        
+       
         textField.contentHorizontalAlignment = .right
         textField.autocorrectionType = .no
         textField.autocapitalizationType = .none
@@ -147,6 +148,7 @@ open class TagField: UIScrollView {
     
     @discardableResult
     open override func becomeFirstResponder() -> Bool {
+        isHiddenCaret = false
         return textField.becomeFirstResponder()
     }
     
@@ -154,6 +156,7 @@ open class TagField: UIScrollView {
     open override func resignFirstResponder() -> Bool {
         deselectAllTags(animated: true)
         tokenizeTextField()
+        isHiddenCaret = true
         return textField.resignFirstResponder()
     }
     
@@ -182,7 +185,6 @@ open class TagField: UIScrollView {
         if !isReadonly {
             deselectAllTags(animated: true)
             becomeFirstResponder()
-            isHiddenCaret = false
         }
     }
     
@@ -205,20 +207,25 @@ open class TagField: UIScrollView {
         let fullWidth = bounds.width - (padding.left + padding.right)
         
         numberOfLines = 1
-        var maxHeightOfLine: CGFloat = 0
+        var lastTagViewHeight: CGFloat = 0
         
         var x: CGFloat = padding.left
         var y: CGFloat = padding.top
+        
+        // - tagLabels position
+        
         for tagLabel in tagLabels {
             let tagSize = tagLabel.intrinsicContentSize
             let spaceWidth = fullWidth - x
             
             if tagSize.width > spaceWidth {
-                // new line
-                x = padding.left
-                y += maxHeightOfLine + lineBetweenSpace
-                maxHeightOfLine = 0
-                numberOfLines += 1
+                let isFirstTag = lastTagViewHeight == 0
+                if !isFirstTag {
+                    // new line
+                    x = padding.left
+                    y += lastTagViewHeight + lineBetweenSpace
+                    numberOfLines += 1
+                }
                 
                 if tagSize.width > fullWidth {
                     // clipping
@@ -232,18 +239,20 @@ open class TagField: UIScrollView {
                 tagLabel.frame.origin = CGPoint(x: x, y: y)
             }
             x += tagSize.width + tagBetweenSpace
-            maxHeightOfLine = max(maxHeightOfLine, tagSize.height)
+            lastTagViewHeight = tagSize.height
         }
+        
+        // - textField position
         
         let availableWidth = (fullWidth - x)
         if availableWidth < textFieldMinWidth {
             // textField start next line
             x = padding.left
-            y += maxHeightOfLine + lineBetweenSpace
+            y += lastTagViewHeight + lineBetweenSpace
             textField.sizeToFit()
             textField.frame.size.width = fullWidth
         } else {
-            textField.frame.size = CGSize(width: availableWidth, height: maxHeightOfLine)
+            textField.frame.size = CGSize(width: availableWidth, height: lastTagViewHeight)
         }
         textField.frame.origin = CGPoint(x: x, y: y)
         intrinsicContentHeight = y + textField.frame.height - padding.top
@@ -261,9 +270,9 @@ open class TagField: UIScrollView {
             tagDelegate?.tagField(self, didSelect: tagLabel.text)
             return
         }
-        // show keyboard
-        becomeFirstResponder()
-        // hide carret
+        
+        // show keyboard but carret is stil hidden
+        textField.becomeFirstResponder()
         isHiddenCaret = true
         
         if !allowMultipleSelection {
@@ -271,6 +280,10 @@ open class TagField: UIScrollView {
             selectedTagLabels.forEach { $0.setSelected(false, animated: true) }
         }
         tagLabel.setSelected(true, animated: true)
+
+        // scroll to selected label
+        scrollRectToVisible(tagLabel.frame, animated: true)
+
         tagDelegate?.tagField(self, didSelect: tagLabel.text)
     }
     
@@ -459,9 +472,6 @@ extension TagField: UITextFieldDelegate {
     }
     
     public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        guard !isHiddenCaret else {
-            return false
-        }
         return tagDelegate?.tagFieldShouldBeginEditing(self) ?? true
     }
 }

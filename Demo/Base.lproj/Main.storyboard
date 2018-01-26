@@ -19,23 +19,20 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hdt-5B-K3s" customClass="TagField" customModule="TagField">
-                                <rect key="frame" x="0.0" y="64" width="375" height="300"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="230"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="300" id="OBA-av-L3u"/>
+                                    <constraint firstAttribute="height" constant="230" id="OBA-av-L3u"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="readOnly" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Whg-ha-xS4">
-                                <rect key="frame" x="10" y="374" width="100" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="100" id="lAZ-kA-ymE"/>
-                                </constraints>
+                                <rect key="frame" x="10" y="304" width="69.5" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="1Al-eW-3Je">
-                                <rect key="frame" x="120" y="369" width="51" height="31"/>
+                                <rect key="frame" x="89.5" y="299" width="51" height="31"/>
                                 <connections>
                                     <action selector="readOnlyValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="Ghz-rP-ayx"/>
                                 </connections>
