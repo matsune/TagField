@@ -252,9 +252,16 @@ open class TagField: UIScrollView {
     }
     
     private func onDeleteBackward() {
-        let tagLabels = selectedTagLabels
-        tagLabels.forEach {
-            deleteTagLabel($0)
+        let selectedLabels = selectedTagLabels
+        if !selectedLabels.isEmpty {
+            selectedLabels.forEach {
+                deleteTagLabel($0)
+            }
+            return
+        }
+        
+        if textField.text?.isEmpty ?? false {
+            tagLabels.last?.setSelected(true, animated: true)
         }
     }
     
