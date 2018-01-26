@@ -55,7 +55,7 @@
 		13B01E392019C56700FF0664 /* TagField.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TagField.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B01E3C2019C56700FF0664 /* TagField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TagField.h; sourceTree = "<group>"; };
 		13B01E3D2019C56700FF0664 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		13B01E482019C5C800FF0664 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B01E482019C5C800FF0664 /* TagFieldDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TagFieldDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B01E4A2019C5C800FF0664 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		13B01E4C2019C5C800FF0664 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		13B01E4F2019C5C800FF0664 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -96,7 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				13B01E392019C56700FF0664 /* TagField.framework */,
-				13B01E482019C5C800FF0664 /* Demo.app */,
+				13B01E482019C5C800FF0664 /* TagFieldDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -104,13 +104,13 @@
 		13B01E3B2019C56700FF0664 /* TagField */ = {
 			isa = PBXGroup;
 			children = (
-				1306B60B201A20C700AFDCA5 /* TagLabel.swift */,
+				13B01E3C2019C56700FF0664 /* TagField.h */,
+				13B01E3D2019C56700FF0664 /* Info.plist */,
+				1306B613201A399E00AFDCA5 /* BackspaceDetectTextField.swift */,
 				1306B60D201A20E100AFDCA5 /* PaddingLabel.swift */,
 				1306B60F201A210900AFDCA5 /* TagField.swift */,
 				1306B611201A213600AFDCA5 /* TagFieldDelegate.swift */,
-				1306B613201A399E00AFDCA5 /* BackspaceDetectTextField.swift */,
-				13B01E3C2019C56700FF0664 /* TagField.h */,
-				13B01E3D2019C56700FF0664 /* Info.plist */,
+				1306B60B201A20C700AFDCA5 /* TagLabel.swift */,
 			);
 			path = TagField;
 			sourceTree = "<group>";
@@ -160,9 +160,9 @@
 			productReference = 13B01E392019C56700FF0664 /* TagField.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		13B01E472019C5C800FF0664 /* Demo */ = {
+		13B01E472019C5C800FF0664 /* TagFieldDemo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B01E572019C5C800FF0664 /* Build configuration list for PBXNativeTarget "Demo" */;
+			buildConfigurationList = 13B01E572019C5C800FF0664 /* Build configuration list for PBXNativeTarget "TagFieldDemo" */;
 			buildPhases = (
 				13B01E442019C5C800FF0664 /* Sources */,
 				13B01E452019C5C800FF0664 /* Frameworks */,
@@ -174,9 +174,9 @@
 			dependencies = (
 				13F0DA3B201AE2EA005AB54A /* PBXTargetDependency */,
 			);
-			name = Demo;
+			name = TagFieldDemo;
 			productName = Demo;
-			productReference = 13B01E482019C5C800FF0664 /* Demo.app */;
+			productReference = 13B01E482019C5C800FF0664 /* TagFieldDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -213,7 +213,7 @@
 			projectRoot = "";
 			targets = (
 				13B01E382019C56700FF0664 /* TagField */,
-				13B01E472019C5C800FF0664 /* Demo */,
+				13B01E472019C5C800FF0664 /* TagFieldDemo */,
 			);
 		};
 /* End PBXProject section */
@@ -454,7 +454,7 @@
 				DEVELOPMENT_TEAM = 8G7ZB52773;
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = co.matsune.Demo;
+				PRODUCT_BUNDLE_IDENTIFIER = co.matsune.TagFieldDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -470,7 +470,7 @@
 				DEVELOPMENT_TEAM = 8G7ZB52773;
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = co.matsune.Demo;
+				PRODUCT_BUNDLE_IDENTIFIER = co.matsune.TagFieldDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -498,7 +498,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B01E572019C5C800FF0664 /* Build configuration list for PBXNativeTarget "Demo" */ = {
+		13B01E572019C5C800FF0664 /* Build configuration list for PBXNativeTarget "TagFieldDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B01E582019C5C800FF0664 /* Debug */,
