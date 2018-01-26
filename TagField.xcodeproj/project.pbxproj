@@ -7,18 +7,44 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1306B60C201A20C700AFDCA5 /* TagLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B60B201A20C700AFDCA5 /* TagLabel.swift */; };
-		1306B60E201A20E100AFDCA5 /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B60D201A20E100AFDCA5 /* PaddingLabel.swift */; };
-		1306B610201A210900AFDCA5 /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B60F201A210900AFDCA5 /* TagField.swift */; };
-		1306B612201A213600AFDCA5 /* TagFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B611201A213600AFDCA5 /* TagFieldDelegate.swift */; };
-		1306B614201A399E00AFDCA5 /* BackspaceDetectTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B613201A399E00AFDCA5 /* BackspaceDetectTextField.swift */; };
 		13B01E3E2019C56700FF0664 /* TagField.h in Headers */ = {isa = PBXBuildFile; fileRef = 13B01E3C2019C56700FF0664 /* TagField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		13B01E4B2019C5C800FF0664 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B01E4A2019C5C800FF0664 /* AppDelegate.swift */; };
 		13B01E4D2019C5C800FF0664 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B01E4C2019C5C800FF0664 /* ViewController.swift */; };
 		13B01E502019C5C800FF0664 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 13B01E4E2019C5C800FF0664 /* Main.storyboard */; };
 		13B01E522019C5C800FF0664 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B01E512019C5C800FF0664 /* Assets.xcassets */; };
 		13B01E552019C5C800FF0664 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 13B01E532019C5C800FF0664 /* LaunchScreen.storyboard */; };
+		13F0DA33201AE2B9005AB54A /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B60D201A20E100AFDCA5 /* PaddingLabel.swift */; };
+		13F0DA34201AE2B9005AB54A /* TagFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B611201A213600AFDCA5 /* TagFieldDelegate.swift */; };
+		13F0DA35201AE2B9005AB54A /* TagLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B60B201A20C700AFDCA5 /* TagLabel.swift */; };
+		13F0DA36201AE2B9005AB54A /* BackspaceDetectTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B613201A399E00AFDCA5 /* BackspaceDetectTextField.swift */; };
+		13F0DA37201AE2B9005AB54A /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B60F201A210900AFDCA5 /* TagField.swift */; };
+		13F0DA38201AE2EA005AB54A /* TagField.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B01E392019C56700FF0664 /* TagField.framework */; };
+		13F0DA39201AE2EA005AB54A /* TagField.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 13B01E392019C56700FF0664 /* TagField.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		13F0DA3A201AE2EA005AB54A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 13B01E302019C56700FF0664 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 13B01E382019C56700FF0664;
+			remoteInfo = TagField;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		13F0DA3C201AE2EA005AB54A /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				13F0DA39201AE2EA005AB54A /* TagField.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1306B60B201A20C700AFDCA5 /* TagLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagLabel.swift; sourceTree = "<group>"; };
@@ -50,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13F0DA38201AE2EA005AB54A /* TagField.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +104,11 @@
 		13B01E3B2019C56700FF0664 /* TagField */ = {
 			isa = PBXGroup;
 			children = (
+				1306B60B201A20C700AFDCA5 /* TagLabel.swift */,
+				1306B60D201A20E100AFDCA5 /* PaddingLabel.swift */,
+				1306B60F201A210900AFDCA5 /* TagField.swift */,
+				1306B611201A213600AFDCA5 /* TagFieldDelegate.swift */,
+				1306B613201A399E00AFDCA5 /* BackspaceDetectTextField.swift */,
 				13B01E3C2019C56700FF0664 /* TagField.h */,
 				13B01E3D2019C56700FF0664 /* Info.plist */,
 			);
@@ -92,11 +124,6 @@
 				13B01E512019C5C800FF0664 /* Assets.xcassets */,
 				13B01E532019C5C800FF0664 /* LaunchScreen.storyboard */,
 				13B01E562019C5C800FF0664 /* Info.plist */,
-				1306B60B201A20C700AFDCA5 /* TagLabel.swift */,
-				1306B60D201A20E100AFDCA5 /* PaddingLabel.swift */,
-				1306B60F201A210900AFDCA5 /* TagField.swift */,
-				1306B611201A213600AFDCA5 /* TagFieldDelegate.swift */,
-				1306B613201A399E00AFDCA5 /* BackspaceDetectTextField.swift */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -140,10 +167,12 @@
 				13B01E442019C5C800FF0664 /* Sources */,
 				13B01E452019C5C800FF0664 /* Frameworks */,
 				13B01E462019C5C800FF0664 /* Resources */,
+				13F0DA3C201AE2EA005AB54A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				13F0DA3B201AE2EA005AB54A /* PBXTargetDependency */,
 			);
 			name = Demo;
 			productName = Demo;
@@ -214,6 +243,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13F0DA36201AE2B9005AB54A /* BackspaceDetectTextField.swift in Sources */,
+				13F0DA35201AE2B9005AB54A /* TagLabel.swift in Sources */,
+				13F0DA34201AE2B9005AB54A /* TagFieldDelegate.swift in Sources */,
+				13F0DA37201AE2B9005AB54A /* TagField.swift in Sources */,
+				13F0DA33201AE2B9005AB54A /* PaddingLabel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -221,17 +255,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1306B60E201A20E100AFDCA5 /* PaddingLabel.swift in Sources */,
 				13B01E4D2019C5C800FF0664 /* ViewController.swift in Sources */,
-				1306B614201A399E00AFDCA5 /* BackspaceDetectTextField.swift in Sources */,
-				1306B612201A213600AFDCA5 /* TagFieldDelegate.swift in Sources */,
 				13B01E4B2019C5C800FF0664 /* AppDelegate.swift in Sources */,
-				1306B610201A210900AFDCA5 /* TagField.swift in Sources */,
-				1306B60C201A20C700AFDCA5 /* TagLabel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		13F0DA3B201AE2EA005AB54A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 13B01E382019C56700FF0664 /* TagField */;
+			targetProxy = 13F0DA3A201AE2EA005AB54A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		13B01E4E2019C5C800FF0664 /* Main.storyboard */ = {
@@ -411,6 +448,7 @@
 		13B01E582019C5C800FF0664 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8G7ZB52773;
@@ -426,6 +464,7 @@
 		13B01E592019C5C800FF0664 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8G7ZB52773;
