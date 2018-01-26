@@ -28,7 +28,7 @@ open class TagField: UIScrollView {
     
     open var textFieldMinWidth: CGFloat = 20
     
-    open var padding: UIEdgeInsets = .zero {
+    open var padding = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10) {
         didSet {
             setNeedsLayout()
         }
@@ -55,19 +55,19 @@ open class TagField: UIScrollView {
     }
     
     // MARK: - TagLabel properties
-    open var tagPadding: UIEdgeInsets = .zero {
+    open var tagPadding = UIEdgeInsets(top: 2, left: 5, bottom: 2, right: 5) {
         didSet {
             tagLabels.forEach { $0.padding = tagPadding }
         }
     }
     
-    open var tagTextColor: UIColor = .black {
+    open var tagTextColor: UIColor = .white {
         didSet {
             tagLabels.forEach { $0.normalTextColor = tagTextColor }
         }
     }
     
-    open var tagBackgroundColor: UIColor = .clear {
+    open var tagBackgroundColor: UIColor = .orange {
         didSet {
             tagLabels.forEach { $0.normalBackgroundColor = tagBackgroundColor }
         }
@@ -79,13 +79,13 @@ open class TagField: UIScrollView {
         }
     }
     
-    open var tagSelectedBackgroundColor: UIColor = .orange {
+    open var tagSelectedBackgroundColor: UIColor = .red {
         didSet {
             tagLabels.forEach { $0.selectedBackgroundColor = tagSelectedBackgroundColor }
         }
     }
     
-    open var tagCornerRadius: CGFloat = 3.0 {
+    open var tagCornerRadius: CGFloat = 8.0 {
         didSet {
             tagLabels.forEach { $0.cornerRadius = tagCornerRadius }
         }
@@ -109,6 +109,8 @@ open class TagField: UIScrollView {
     }
     
     private func setup() {
+        backgroundColor = .white
+        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TagField.handleTap(_:)))
         addGestureRecognizer(tapGesture)
         

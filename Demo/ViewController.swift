@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import TagField
 
 final class ViewController: UIViewController {
 
@@ -14,23 +15,27 @@ final class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .gray
-     
-        tagField.frame = CGRect(x: 12, y: 50, width: view.bounds.width - 24, height: 100)
-        tagField.backgroundColor = .white
-        tagField.padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        tagField.addTag(text: "aaa")
-        tagField.addTag(text: "aa")
-        tagField.addTag(text: "aaaaaaaaaaaaaaaaa")
-        tagField.addTag(text: "aaadasfdfsads")
-        tagField.addTag(text: "aaaddd")
-        tagField.tagBackgroundColor = .blue
+        view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
+        
+        tagField.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 200)
+//        tagField.padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+//        tagField.tagPadding = UIEdgeInsets(top: 5, left: 8, bottom: 8, right: 10)
+//        tagField.tagBackgroundColor = .blue
         
         view.addSubview(tagField)
-        
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(ViewController.didTapView(recognizer:))))
+        
+        tagField.addTag(text: "tag1")
+        tagField.addTag(text: "tag2")
+        tagField.addTag(text: "tagtagtagtag")
+        tagField.addTag(text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.")
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        tagField.becomeFirstResponder()
+    }
+    
     @objc
     func didTapView(recognizer: UITapGestureRecognizer) {
         tagField.resignFirstResponder()

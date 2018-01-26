@@ -56,6 +56,7 @@ open class TagLabel: PaddingLabel {
     }
     
     private func setup() {
+        textAlignment = .center
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TagLabel.handleTap(_:)))
         addGestureRecognizer(tapGesture)
     }
