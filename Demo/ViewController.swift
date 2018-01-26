@@ -9,6 +9,36 @@
 import UIKit
 import TagField
 
+final class CustomTagView: TagView {
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    
+    override init(text: String?) {
+        super.init(text: text)
+        setup()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+    
+    private func setup() {
+        deleteButton = UIButton()
+        deleteButton?.setImage(#imageLiteral(resourceName: "cancel"), for: .normal)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let r: CGFloat = 15
+        deleteButton?.frame = CGRect(x: bounds.width - r/2, y: -r/2, width: r, height: r)
+    }
+}
+
+
 final class ViewController: UIViewController {
 
     @IBOutlet weak var tagField: TagField!
@@ -24,8 +54,13 @@ final class ViewController: UIViewController {
         sharpLabel.font = UIFont.systemFont(ofSize: 24)
         tagField.addSubview(sharpLabel)
 
+        tagField.registerTagView(CustomTagView.self)
         tagField.placeholder = "add tag..."
         tagField.tagDelegate = self
+        tagField.padding.top = 8
+        tagField.lineBetweenSpace = 8
+        tagField.tagBetweenSpace = 5
+        tagField.allowMultipleSelection = true
         
         tagField.addTag(text: "tag1")
         tagField.addTag(text: "tag2")

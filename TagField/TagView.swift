@@ -8,20 +8,31 @@
 
 import Foundation
 
-final class TagView: UIView {
+open class TagView: UIView {
 
     // MARK: - Subviews
     private let label = PaddingLabel()
+    public var deleteButton: UIButton? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            if let button = deleteButton {
+                button.alpha = 0.0
+                button.addTarget(self, action: #selector(TagView.onClickDelete(_:)), for: .touchUpInside)
+                addSubview(button)
+            }
+        }
+    }
     
     // MARK: - Stored Properties
     public private(set) var isSelected = false
 
     public var animationDuration: TimeInterval = 0.3
 
-    var onTap: ((TagView) -> Void)?
+    var onTapLabel: ((TagView) -> Void)?
+    var onTapDelete: ((TagView) -> Void)?
     
     // MARK: - Computed Properties
-    override var intrinsicContentSize: CGSize {
+    override open var intrinsicContentSize: CGSize {
         return label.intrinsicContentSize
     }
     
@@ -30,12 +41,12 @@ final class TagView: UIView {
         get { return label.padding }
     }
     
-    var font: UIFont! {
+    public var font: UIFont! {
         set { label.font = newValue }
         get { return label.font }
     }
     
-    var text: String? {
+    public var text: String? {
         set { label.text = newValue }
         get { return label.text }
     }
@@ -46,18 +57,18 @@ final class TagView: UIView {
     }
     
     // MARK: - Initializer
-    override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         label.frame = frame
         setup()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
     }
     
-    init(text: String?) {
+    public init(text: String?) {
         super.init(frame: .zero)
         label.text = text
         setup()
@@ -73,14 +84,19 @@ final class TagView: UIView {
         addSubview(label)
     }
     
-    override func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         label.frame = bounds
     }
     
     @objc
     private func handleTap(_ recognizer: UITapGestureRecognizer) {
-        onTap?(self)
+        onTapLabel?(self)
+    }
+    
+    @objc
+    private func onClickDelete(_ sender: UIButton) {
+        onTapDelete?(self)
     }
 
     
@@ -128,9 +144,11 @@ final class TagView: UIView {
         if isSelected {
             label.backgroundColor = self.selectedBackgroundColor
             label.textColor = self.selectedTextColor
+            deleteButton?.alpha = 1.0
         } else {
             label.backgroundColor = self.normalBackgroundColor
             label.textColor = self.normalTextColor
+            deleteButton?.alpha = 0.0
         }
     }
 }

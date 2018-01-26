@@ -61,6 +61,8 @@ open class TagField: UIScrollView {
         }
     }
     
+    private var TagViewClassType = TagView.self
+    
     // MARK: - TagView Properties
     open var tagPadding = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8) {
         didSet {
@@ -108,7 +110,7 @@ open class TagField: UIScrollView {
     }
     
     open var placeholder: String? {
-        set { textField.placeholder = newValue }
+        set { textField.placeholder = newValue}
         get { return textField.placeholder }
     }
     
@@ -155,6 +157,10 @@ open class TagField: UIScrollView {
         return textField.resignFirstResponder()
     }
     
+    public func registerTagView(_ classType: TagView.Type) {
+        self.TagViewClassType = classType
+    }
+    
     public func addTag(text: String) {
         if tagViews.contains(where: {$0.text == text}) {
             clearTextField()
@@ -183,17 +189,17 @@ open class TagField: UIScrollView {
     }
     
     private func createTagView(text: String) -> TagView {
-        let tagView = TagView(text: text)
+        let tagView = TagViewClassType.init()
+        tagView.text = text
+        tagView.font = font
+        tagView.padding = tagPadding
         tagView.normalTextColor = tagTextColor
         tagView.normalBackgroundColor = tagBackgroundColor
         tagView.selectedTextColor = tagSelectedTextColor
         tagView.selectedBackgroundColor = tagSelectedBackgroundColor
         tagView.cornerRadius = tagCornerRadius
-        tagView.padding = tagPadding
-        tagView.font = font
-        tagView.text = text
-        
-        tagView.onTap = onTapTagView
+        tagView.onTapLabel = onTapTagLabel
+        tagView.onTapDelete = onTapTagDelete
         return tagView
     }
     
@@ -267,7 +273,7 @@ open class TagField: UIScrollView {
         }
     }
     
-    private func onTapTagView(_ tagView: TagView) {
+    private func onTapTagLabel(_ tagView: TagView) {
         if isReadonly {
             tagDelegate?.tagField(self, didSelect: tagView.text)
             return
@@ -287,6 +293,10 @@ open class TagField: UIScrollView {
         scrollRectToVisible(tagView.frame, animated: true)
 
         tagDelegate?.tagField(self, didSelect: tagView.text)
+    }
+    
+    private func onTapTagDelete(_ tagView: TagView) {
+        deleteTagView(tagView)
     }
     
     private func onTapTextField() {
