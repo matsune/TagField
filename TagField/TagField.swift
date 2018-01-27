@@ -162,22 +162,38 @@ open class TagField: UIScrollView {
         self.TagViewClassType = classType
     }
     
-    public func addTag(text: String) {
-        if tagViews.contains(where: {$0.text == text}) {
+    public func append(tag: String) {
+        if isExistTag(tag) {
             clearTextField()
             return
         }
         
-        let tagView = createTagView(text: text)
+        let tagView = createTagView(text: tag)
         addSubview(tagView)
         tagViews.append(tagView)
         repositionSubviews()
     }
     
-    public func deleteTag(text: String) {
-        if let tagView = tagViews.first(where: {$0.text == text}) {
+    public func append(tags: [String]) {
+        tags.filter { !isExistTag($0) }
+            .map { createTagView(text: $0) }
+            .forEach {
+                addSubview($0)
+                tagViews.append($0)
+            }
+        repositionSubviews()
+    }
+    
+    public func remove(tag: String) {
+        if let tagView = tagViews.first(where: {$0.text == tag}) {
             deleteTagView(tagView)
         }
+    }
+    
+    public func removeTags() {
+        tagViews.forEach { $0.removeFromSuperview() }
+        tagViews.removeAll()
+        repositionSubviews()
     }
     
     // MARK: - Private methods
@@ -202,6 +218,10 @@ open class TagField: UIScrollView {
         tagView.onTapLabel = onTapTagLabel
         tagView.onTapDelete = onTapTagDelete
         return tagView
+    }
+    
+    private func isExistTag(_ tag: String) -> Bool {
+        return tagViews.contains(where: { $0.text == tag })
     }
     
     private func repositionSubviews() {
@@ -423,7 +443,7 @@ extension TagField: UITextFieldDelegate {
     
     private func tokenizeTextField() {
         if let text = textField.text, !text.isEmpty {
-            addTag(text: text)
+            append(tag: text)
             clearTextField()
         }
     }

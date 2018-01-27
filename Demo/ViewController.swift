@@ -61,10 +61,9 @@ final class ViewController: UIViewController {
         tagField.lineBetweenSpace = 8
         tagField.tagBetweenSpace = 5
         
-        tagField.addTag(text: "tag1")
-        tagField.addTag(text: "tag2")
-        tagField.addTag(text: "tagtagtagtag")
-        tagField.addTag(text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.")
+        tagField.append(tags: ["tag1", "tag2"])
+        tagField.append(tag: "tagtagtagtag")
+        tagField.append(tag: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.")
     }
 
     override func viewDidAppear(_ animated: Bool) {
