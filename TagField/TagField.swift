@@ -196,6 +196,17 @@ open class TagField: UIScrollView {
         repositionSubviews()
     }
     
+    public func setTags(_ tags: [String]) {
+        tagViews.forEach { $0.removeFromSuperview() }
+        tagViews.removeAll()
+        tags.map { createTagView(text: $0) }
+            .forEach {
+                addSubview($0)
+                tagViews.append($0)
+        }
+        repositionSubviews()
+    }
+    
     // MARK: - Private methods
     @objc
     private func handleTap(_ recognizer: UITapGestureRecognizer) {
