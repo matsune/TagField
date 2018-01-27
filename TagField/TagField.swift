@@ -280,8 +280,7 @@ open class TagField: UIScrollView {
         let availableWidth = bounds.width - x - (padding.right + sideInset.right)
         if availableWidth < textFieldMinWidth {
             // textField start next line
-            numberOfLines += 1
-            sideInset = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines) ?? (0, 0)
+            sideInset = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines + 1) ?? (0, 0)
             x = padding.left + sideInset.left
             y += lastTagViewHeight + lineBetweenSpace
             
