@@ -307,10 +307,6 @@ open class TagField: UIScrollView {
         invalidateIntrinsicContentSize()
         
         contentSize = CGSize(width: bounds.width, height: intrinsicContentHeight + padding.top + padding.bottom)
-        
-        if isScrollEnabled {
-            scrollRectToVisible(textField.frame, animated: false)
-        }
     }
     
     private func onTapTagLabel(_ tagView: TagView) {
@@ -328,9 +324,6 @@ open class TagField: UIScrollView {
             selectedTagViews.forEach { $0.setSelected(false, animated: true) }
         }
         tagView.setSelected(true, animated: true)
-
-        // scroll to selected label
-        scrollRectToVisible(tagView.frame, animated: true)
 
         tagDelegate?.tagField(self, didSelect: tagView.text)
     }
@@ -457,6 +450,10 @@ extension TagField: UITextFieldDelegate {
         }
         
         tokenizeTextField()
+        if isScrollEnabled {
+            scrollRectToVisible(textField.frame, animated: false)
+        }
+
         return tagDelegate?.tagFieldShouldReturn(self) ?? true
     }
     
