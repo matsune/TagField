@@ -437,6 +437,7 @@ extension TagField: UITextFieldDelegate {
         tagDelegate?.tagFieldDidEndEditing(self)
     }
     
+    @available(iOS 10.0, *)
     public func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason) {
         tagDelegate?.tagFieldDidEndEditing(self, reason: reason)
     }

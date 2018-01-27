@@ -14,6 +14,7 @@ public protocol TagFieldDelegate: class {
     func tagFieldShouldReturn(_ tagField: TagField) -> Bool
     func tagFieldDidBeginEditing(_ tagField: TagField)
     func tagFieldDidEndEditing(_ tagField: TagField)
+    @available(iOS 10.0, *)
     func tagFieldDidEndEditing(_ tagField: TagField, reason: UITextFieldDidEndEditingReason)
     func tagFieldShouldClear(_ tagField: TagField) -> Bool
     func tagFieldShouldEndEditing(_ tagField: TagField) -> Bool
@@ -34,6 +35,7 @@ public extension TagFieldDelegate {
     
     func tagFieldDidEndEditing(_ tagField: TagField) {}
     
+    @available(iOS 10.0, *)
     func tagFieldDidEndEditing(_ tagField: TagField, reason: UITextFieldDidEndEditingReason) {}
     
     func tagFieldShouldClear(_ tagField: TagField) -> Bool {
