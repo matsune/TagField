@@ -149,6 +149,11 @@ open class TagField: UIScrollView {
     }
     
     // MARK: - Public Methods
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        repositionSubviews()
+    }
+    
     @discardableResult
     open override func becomeFirstResponder() -> Bool {
         isHiddenCaret = false
@@ -240,9 +245,11 @@ open class TagField: UIScrollView {
         return tagViews.contains(where: { $0.text == tag })
     }
     
+    private var lastTagViewHeight: CGFloat = 0
+    
     public func repositionSubviews() {
         numberOfLines = 1
-        var lastTagViewHeight: CGFloat = 0
+        
         var sideInset: (left: CGFloat, right: CGFloat) = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines) ?? (0, 0)
         var x: CGFloat = padding.left + sideInset.left
         var y: CGFloat = padding.top
@@ -295,7 +302,7 @@ open class TagField: UIScrollView {
             } else {
                 if lastTagViewHeight == 0 {
                     textField.sizeToFit()
-                    lastTagViewHeight = textField.frame.height
+                    lastTagViewHeight = createTagView(text: "a").intrinsicContentSize.height
                 }
                 textField.frame.size = CGSize(width: availableWidth, height: lastTagViewHeight)
             }
