@@ -245,7 +245,9 @@ open class TagField: UIScrollView {
         return tagViews.contains(where: { $0.text == tag })
     }
     
-    private var lastTagViewHeight: CGFloat = 0
+    private lazy var tagViewHeight: CGFloat = {
+        return createTagView(text: "a").intrinsicContentSize.height
+    }()
     
     public func repositionSubviews() {
         numberOfLines = 1
@@ -255,20 +257,19 @@ open class TagField: UIScrollView {
         var y: CGFloat = padding.top
         
         // - tagLabels position
-        
+        var isFirstTag = true
         for tagView in tagViews {
             let tagSize = tagView.intrinsicContentSize
             var availableWidth = bounds.width - x - (padding.right + sideInset.right)
             
             if tagSize.width > availableWidth {
-                let isFirstTag = lastTagViewHeight == 0
                 if !isFirstTag {
                     // new line
                     numberOfLines += 1
                     sideInset = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines) ?? (0, 0)
                     // reset point
                     x = padding.left + sideInset.left
-                    y += lastTagViewHeight + lineBetweenSpace
+                    y += tagViewHeight + lineBetweenSpace
                     
                     // refresh available width
                     availableWidth = bounds.width - x - (padding.right + sideInset.right)
@@ -284,33 +285,25 @@ open class TagField: UIScrollView {
                 tagView.frame = CGRect(origin: CGPoint(x: x, y: y), size: tagSize)
             }
             x += tagSize.width + tagBetweenSpace
-            lastTagViewHeight = tagSize.height
+            isFirstTag = false
         }
         
         // - textField position
         if !isReadonly {
-            let availableWidth = bounds.width - x - (padding.right + sideInset.right)
+            var availableWidth = bounds.width - x - (padding.right + sideInset.right)
             if availableWidth < textFieldMinWidth {
                 // textField start next line
                 numberOfLines += 1
                 sideInset = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines) ?? (0, 0)
                 x = padding.left + sideInset.left
-                y += lastTagViewHeight + lineBetweenSpace
-                
-                textField.sizeToFit()
-                textField.frame.size.width = availableWidth
-            } else {
-                if lastTagViewHeight == 0 {
-                    textField.sizeToFit()
-                    lastTagViewHeight = createTagView(text: "a").intrinsicContentSize.height
-                }
-                textField.frame.size = CGSize(width: availableWidth, height: lastTagViewHeight)
+                y += tagViewHeight + lineBetweenSpace
+                availableWidth = bounds.width - x - (padding.right + sideInset.right)
             }
+            textField.frame.size = CGSize(width: availableWidth, height: tagViewHeight)
             textField.frame.origin = CGPoint(x: x, y: y)
-            lastTagViewHeight = textField.frame.height
         }
         
-        intrinsicContentHeight = y + lastTagViewHeight - padding.top
+        intrinsicContentHeight = y + tagViewHeight - padding.top
         invalidateIntrinsicContentSize()
         
         contentSize = CGSize(width: bounds.width, height: intrinsicContentHeight + padding.top + padding.bottom)
