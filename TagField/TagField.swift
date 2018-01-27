@@ -49,6 +49,7 @@ open class TagField: UIScrollView {
             }
             textField.isEnabled = !isReadonly
             textField.isHiddenPlaceholder = isReadonly
+            repositionSubviews()
         }
     }
     
@@ -276,25 +277,29 @@ open class TagField: UIScrollView {
         }
         
         // - textField position
-        
-        let availableWidth = bounds.width - x - (padding.right + sideInset.right)
-        if availableWidth < textFieldMinWidth {
-            // textField start next line
-            sideInset = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines + 1) ?? (0, 0)
-            x = padding.left + sideInset.left
-            y += lastTagViewHeight + lineBetweenSpace
-            
-            textField.sizeToFit()
-            textField.frame.size.width = availableWidth
-        } else {
-            if lastTagViewHeight == 0 {
+        if !isReadonly {
+            let availableWidth = bounds.width - x - (padding.right + sideInset.right)
+            if availableWidth < textFieldMinWidth {
+                // textField start next line
+                numberOfLines += 1
+                sideInset = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines) ?? (0, 0)
+                x = padding.left + sideInset.left
+                y += lastTagViewHeight + lineBetweenSpace
+                
                 textField.sizeToFit()
-                lastTagViewHeight = textField.frame.height
+                textField.frame.size.width = availableWidth
+            } else {
+                if lastTagViewHeight == 0 {
+                    textField.sizeToFit()
+                    lastTagViewHeight = textField.frame.height
+                }
+                textField.frame.size = CGSize(width: availableWidth, height: lastTagViewHeight)
             }
-            textField.frame.size = CGSize(width: availableWidth, height: lastTagViewHeight)
+            textField.frame.origin = CGPoint(x: x, y: y)
+            lastTagViewHeight = textField.frame.height
         }
-        textField.frame.origin = CGPoint(x: x, y: y)
-        intrinsicContentHeight = y + textField.frame.height - padding.top
+        
+        intrinsicContentHeight = y + lastTagViewHeight - padding.top
         invalidateIntrinsicContentSize()
         
         contentSize = CGSize(width: bounds.width, height: intrinsicContentHeight + padding.top + padding.bottom)
