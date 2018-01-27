@@ -240,7 +240,7 @@ open class TagField: UIScrollView {
         return tagViews.contains(where: { $0.text == tag })
     }
     
-    private func repositionSubviews() {
+    public func repositionSubviews() {
         numberOfLines = 1
         var lastTagViewHeight: CGFloat = 0
         var sideInset: (left: CGFloat, right: CGFloat) = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines) ?? (0, 0)
