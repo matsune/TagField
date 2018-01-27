@@ -103,6 +103,10 @@ open class TagField: UIScrollView {
     }
     
     // MARK: - Computed Properties
+    public var tags: [String?] {
+        return tagViews.map { $0.text }
+    }
+    
     override open var intrinsicContentSize: CGSize {
         return CGSize(width: bounds.width - (padding.left + padding.right), height: intrinsicContentHeight)
     }
