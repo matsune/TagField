@@ -375,6 +375,7 @@ open class TagField: UIScrollView {
             tagViews.remove(at: index)
         }
         repositionSubviews()
+        becomeFirstResponder()
     }
 }
 
