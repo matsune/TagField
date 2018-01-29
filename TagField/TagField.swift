@@ -307,6 +307,8 @@ open class TagField: UIScrollView {
         invalidateIntrinsicContentSize()
         
         contentSize = CGSize(width: bounds.width, height: intrinsicContentHeight + padding.top + padding.bottom)
+        
+        textField.isHiddenPlaceholder = !tags.isEmpty
     }
     
     private func onTapTagLabel(_ tagView: TagView) {
