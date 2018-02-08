@@ -11,6 +11,7 @@ import UIKit
 
 public protocol TagFieldDelegate: class {
     func tagField(_ tagField: TagField, didSelect tag: String?)
+    func tagFieldDidChangeText(_ tagField: TagField)
     func tagFieldShouldReturn(_ tagField: TagField) -> Bool
     func tagFieldDidBeginEditing(_ tagField: TagField)
     func tagFieldDidEndEditing(_ tagField: TagField)
@@ -26,6 +27,8 @@ public protocol TagFieldDelegate: class {
 public extension TagFieldDelegate {
     
     func tagField(_ tagField: TagField, didSelect tag: String?) {}
+    
+    func tagFieldDidChangeText(_ tagField: TagField) {}
     
     func tagFieldShouldReturn(_ tagField: TagField) -> Bool {
         return true

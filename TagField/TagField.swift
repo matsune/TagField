@@ -120,6 +120,20 @@ open class TagField: UIScrollView {
         get { return textField.placeholder }
     }
     
+    open var placeholderImageView: UIImageView?
+    
+    public func setPlaceholderImage(_ image: UIImage?) {
+        if let newValue = image {
+            if placeholderImageView == nil {
+                placeholderImageView = UIImageView()
+                addSubview(placeholderImageView!)
+            }
+            placeholderImageView?.image = newValue
+        } else {
+            placeholderImageView?.removeFromSuperview()
+        }
+    }
+    
     // MARK: - Initializer
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -146,6 +160,12 @@ open class TagField: UIScrollView {
         textField.onTap = onTapTextField
         textField.onDeleteBackward = onDeleteBackward
         addSubview(textField)
+        
+        NotificationCenter.default
+            .addObserver(self,
+                         selector: #selector(TagField.textFieldDidChange(notification:)),
+                         name: Notification.Name.UITextFieldTextDidChange,
+                         object: textField)
     }
     
     // MARK: - Public Methods
@@ -303,12 +323,15 @@ open class TagField: UIScrollView {
             textField.frame.origin = CGPoint(x: x, y: y)
         }
         
+        textField.isHiddenPlaceholder = !tags.isEmpty || placeholderImageView != nil
+        placeholderImageView?.sizeToFit()
+        placeholderImageView?.frame.origin = CGPoint(x: x, y: y)
+        placeholderImageView?.isHidden = !tags.isEmpty
+            
         intrinsicContentHeight = y + tagViewHeight - padding.top
         invalidateIntrinsicContentSize()
         
         contentSize = CGSize(width: bounds.width, height: intrinsicContentHeight + padding.top + padding.bottom)
-        
-        textField.isHiddenPlaceholder = !tags.isEmpty
     }
     
     private func onTapTagLabel(_ tagView: TagView) {
@@ -359,6 +382,7 @@ open class TagField: UIScrollView {
             selectedTagViews.forEach {
                 deleteTagView($0)
             }
+            tagDelegate?.tagFieldDidChangeText(self)
             return
         }
         
@@ -445,6 +469,12 @@ extension TagField: UITextFieldDelegate {
             return false
         }
         return true
+    }
+    
+    @objc
+    func textFieldDidChange(notification: Notification) {
+        placeholderImageView?.isHidden = !(textField.text?.isEmpty ?? false)
+        tagDelegate?.tagFieldDidChangeText(self)
     }
     
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
