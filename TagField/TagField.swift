@@ -15,7 +15,7 @@ open class TagField: UIScrollView {
     
     private var tagViews: [TagView] = []
     
-    private let textField = TagFieldContentTextField()
+    public let textField = TagFieldContentTextField()
     
     // MARK: - Stored properties
     open var delimiter: String?
@@ -129,6 +129,7 @@ open class TagField: UIScrollView {
                 addSubview(placeholderImageView!)
             }
             placeholderImageView?.image = newValue
+            placeholderImageView?.sizeToFit()
         } else {
             placeholderImageView?.removeFromSuperview()
         }
@@ -324,10 +325,9 @@ open class TagField: UIScrollView {
         }
         
         textField.isHiddenPlaceholder = !tags.isEmpty || placeholderImageView != nil
-        placeholderImageView?.sizeToFit()
-        placeholderImageView?.frame.origin = CGPoint(x: x, y: y)
+        placeholderImageView?.frame.origin = CGPoint(x: x + 5, y: y)
         placeholderImageView?.isHidden = !tags.isEmpty
-            
+
         intrinsicContentHeight = y + tagViewHeight - padding.top
         invalidateIntrinsicContentSize()
         

@@ -9,19 +9,19 @@
 import Foundation
 import UIKit
 
-final class TagFieldContentTextField: UITextField {
+final public class TagFieldContentTextField: UITextField {
     
     var onDeleteBackward: (() -> Void)?
     var onTap: (() -> Void)?
     var isHiddenCaret = false
     var isHiddenPlaceholder = false
     
-    override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
     }
@@ -31,12 +31,12 @@ final class TagFieldContentTextField: UITextField {
         addGestureRecognizer(tapGesture)
     }
     
-    override func deleteBackward() {
+    override public func deleteBackward() {
         onDeleteBackward?()
         super.deleteBackward()
     }
     
-    override func caretRect(for position: UITextPosition) -> CGRect {
+    override public func caretRect(for position: UITextPosition) -> CGRect {
         if isHiddenCaret {
             return .zero
         }
@@ -48,7 +48,7 @@ final class TagFieldContentTextField: UITextField {
         onTap?()
     }
     
-    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+    override public func placeholderRect(forBounds bounds: CGRect) -> CGRect {
         if isHiddenPlaceholder {
             return .zero
         }
