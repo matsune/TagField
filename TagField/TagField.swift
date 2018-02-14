@@ -473,7 +473,7 @@ extension TagField: UITextFieldDelegate {
     
     @objc
     func textFieldDidChange(notification: Notification) {
-        placeholderImageView?.isHidden = !(textField.text?.isEmpty ?? false)
+        placeholderImageView?.isHidden = !tags.isEmpty || !(textField.text?.isEmpty ?? false)
         tagDelegate?.tagFieldDidChangeText(self)
     }
     
