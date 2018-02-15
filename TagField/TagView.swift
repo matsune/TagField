@@ -28,8 +28,8 @@ open class TagView: UIView {
 
     public var animationDuration: TimeInterval = 0.3
 
-    var onTapLabel: ((TagView) -> Void)?
-    var onTapDelete: ((TagView) -> Void)?
+    public var onTapLabel: ((TagView) -> Void)?
+    public var onTapDelete: ((TagView) -> Void)?
     
     // MARK: - Computed Properties
     override open var intrinsicContentSize: CGSize {
