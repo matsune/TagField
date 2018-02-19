@@ -203,21 +203,27 @@ open class TagField: UIScrollView {
         addSubview(tagView)
         tagViews.append(tagView)
         repositionSubviews()
+        
+        tagDelegate?.tagField(self, didChange: tags)
     }
     
     public func append(tags: [String]) {
-        tags.filter { !isExistTag($0) }
+        tags
+            .filter { !isExistTag($0) }
             .map { createTagView(text: $0) }
             .forEach {
                 addSubview($0)
                 tagViews.append($0)
             }
         repositionSubviews()
+        
+        tagDelegate?.tagField(self, didChange: tags)
     }
     
     public func remove(tag: String) {
         if let tagView = tagViews.first(where: {$0.text == tag}) {
             deleteTagView(tagView)
+            tagDelegate?.tagField(self, didChange: tags)
         }
     }
     
@@ -225,6 +231,7 @@ open class TagField: UIScrollView {
         tagViews.forEach { $0.removeFromSuperview() }
         tagViews.removeAll()
         repositionSubviews()
+        tagDelegate?.tagField(self, didChange: [])
     }
     
     public func setTags(_ tags: [String]) {
@@ -236,6 +243,7 @@ open class TagField: UIScrollView {
                 tagViews.append($0)
         }
         repositionSubviews()
+        tagDelegate?.tagField(self, didChange: tags)
     }
     
     // MARK: - Private methods
@@ -355,6 +363,7 @@ open class TagField: UIScrollView {
     
     private func onTapTagDelete(_ tagView: TagView) {
         deleteTagView(tagView)
+        tagDelegate?.tagField(self, didChange: tags)
     }
     
     private func onTapTextField() {
@@ -382,6 +391,7 @@ open class TagField: UIScrollView {
             selectedTagViews.forEach {
                 deleteTagView($0)
             }
+            tagDelegate?.tagField(self, didChange: tags)
             tagDelegate?.tagFieldDidChangeText(self)
             return
         }

@@ -86,6 +86,10 @@ extension ViewController: TagFieldDelegate {
         print("didSelect \(String(describing: tag))")
     }
     
+    func tagField(_ tagField: TagField, didChange tags: [String?]) {
+        print("didChange tags: \(tags)")
+    }
+    
     func tagFieldShouldReturn(_ tagField: TagField) -> Bool {
         print("shouldReturn")
         return true
