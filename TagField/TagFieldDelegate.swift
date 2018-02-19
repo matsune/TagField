@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 public protocol TagFieldDelegate: class {
-    func tagField(_ tagField: TagField, didSelect tag: String?)
-    func tagField(_ tagField: TagField, didChange tags: [String?])
+    func tagField(_ tagField: TagField, didSelect tag: String)
+    func tagField(_ tagField: TagField, didChange tags: [String])
     
     func tagFieldDidChangeText(_ tagField: TagField)
     func tagFieldShouldReturn(_ tagField: TagField) -> Bool
@@ -28,9 +28,9 @@ public protocol TagFieldDelegate: class {
 
 public extension TagFieldDelegate {
     
-    func tagField(_ tagField: TagField, didSelect tag: String?) {}
+    func tagField(_ tagField: TagField, didSelect tag: String) {}
     
-    func tagField(_ tagField: TagField, didChange tags: [String?]) {}
+    func tagField(_ tagField: TagField, didChange tags: [String]) {}
     
     func tagFieldDidChangeText(_ tagField: TagField) {}
     

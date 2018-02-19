@@ -82,11 +82,11 @@ final class ViewController: UIViewController {
 }
 
 extension ViewController: TagFieldDelegate {
-    func tagField(_ tagField: TagField, didSelect tag: String?) {
+    func tagField(_ tagField: TagField, didSelect tag: String) {
         print("didSelect \(String(describing: tag))")
     }
     
-    func tagField(_ tagField: TagField, didChange tags: [String?]) {
+    func tagField(_ tagField: TagField, didChange tags: [String]) {
         print("didChange tags: \(tags)")
     }
     

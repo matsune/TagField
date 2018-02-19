@@ -103,8 +103,8 @@ open class TagField: UIScrollView {
     }
     
     // MARK: - Computed Properties
-    public var tags: [String?] {
-        return tagViews.map { $0.text }
+    public var tags: [String] {
+        return tagViews.flatMap { $0.text }
     }
     
     override open var intrinsicContentSize: CGSize {
@@ -344,7 +344,7 @@ open class TagField: UIScrollView {
     
     private func onTapTagLabel(_ tagView: TagView) {
         if isReadonly {
-            tagDelegate?.tagField(self, didSelect: tagView.text)
+            tagDelegate?.tagField(self, didSelect: tagView.text ?? "")
             return
         }
         
@@ -358,7 +358,7 @@ open class TagField: UIScrollView {
         }
         tagView.setSelected(true, animated: true)
 
-        tagDelegate?.tagField(self, didSelect: tagView.text)
+        tagDelegate?.tagField(self, didSelect: tagView.text ?? "")
     }
     
     private func onTapTagDelete(_ tagView: TagView) {
