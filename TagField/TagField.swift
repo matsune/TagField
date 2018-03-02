@@ -9,10 +9,6 @@
 import Foundation
 import UIKit
 
-public protocol TagFieldDataSource: class {
-    func styleForTag(at index: Int) -> TagStyle
-}
-
 open class TagField: UIScrollView {
     
     weak open var tagDelegate: TagFieldDelegate?
@@ -24,8 +20,6 @@ open class TagField: UIScrollView {
     
     // MARK: - Stored properties
     open var delimiter: String?
-    
-    open var tagBetweenSpace: CGFloat = 2.0
     
     open var lineBetweenSpace: CGFloat = 3.0
     
@@ -285,9 +279,9 @@ open class TagField: UIScrollView {
                 tagViews[i].frame = CGRect(origin: CGPoint(x: x, y: y), size: tagSize)
             }
             
-            tagViews[i].apply(dataSource?.styleForTag(at: i) ?? defaultStyle)
+            tagViews[i].apply(dataSource?.tagField(self, styleForTagAt: i) ?? defaultStyle)
             
-            x += tagSize.width + tagBetweenSpace
+            x += tagSize.width + (dataSource?.tagField(self, interTagSpacingAt: i) ?? 2.0)
         }
         
         // - textField position

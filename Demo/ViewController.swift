@@ -59,7 +59,6 @@ final class ViewController: UIViewController {
         tagField.tagDelegate = self
         tagField.padding.top = 8
         tagField.lineBetweenSpace = 8
-        tagField.tagBetweenSpace = 5
         tagField.dataSource = self
         
         tagField.append(tags: ["tag1", "tag2"])
@@ -132,11 +131,17 @@ extension ViewController: TagFieldDelegate {
 }
 
 extension ViewController: TagFieldDataSource {
-    func styleForTag(at index: Int) -> TagStyle {
+    // require
+    func tagField(_ tagField: TagField, styleForTagAt index: Int) -> TagStyle {
         return TagStyle {
             $0.normalTextColor = .white
             $0.normalBackgroundColor = index == 0 ? UIColor(red: 0.2, green: 0.48, blue: 0.84, alpha: 1.0) : .orange
             $0.cornerRadius = 4.0
         }
+    }
+    
+    // optional
+    func tagField(_ tagField: TagField, interTagSpacingAt index: Int) -> CGFloat {
+        return index == 0 ? 10 : 5
     }
 }
