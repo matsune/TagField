@@ -27,6 +27,8 @@ open class TagField: UIScrollView {
     
     open var textFieldMinWidth: CGFloat = 20
     
+    open var yOffsetForCarret: CGFloat = 0
+    
     open var padding = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10) {
         didSet {
             setNeedsLayout()
@@ -294,11 +296,8 @@ open class TagField: UIScrollView {
                 x = padding.left + sideInset.left
                 y += tagViewHeight + lineBetweenSpace
                 availableWidth = bounds.width - x - (padding.right + sideInset.right)
-            } else {
-                if let centerY = tagViews.last?.center.y {
-                    y = centerY - tagViewHeight / 2
-                }
             }
+            y += yOffsetForCarret
             textField.frame.size = CGSize(width: availableWidth, height: tagViewHeight)
             textField.frame.origin = CGPoint(x: x, y: y)
         }

@@ -48,7 +48,7 @@ final class ViewController: UIViewController {
         view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(ViewController.didTapView(recognizer:))))
 
-        let sharpLabel = UILabel(frame: CGRect(x: 12, y: 7, width: 25, height: 28))
+        let sharpLabel = UILabel(frame: CGRect(x: 12, y: 10, width: 25, height: 28))
         sharpLabel.textAlignment = .center
         sharpLabel.text = "♯"
         sharpLabel.font = UIFont.systemFont(ofSize: 24)
@@ -57,6 +57,7 @@ final class ViewController: UIViewController {
         tagField.registerTagView(CustomTagView.self)
         tagField.placeholder = "add tag..."
         tagField.tagDelegate = self
+        tagField.yOffsetForCarret = 6
         tagField.padding.top = 8
         tagField.lineBetweenSpace = 13
         tagField.dataSource = self
