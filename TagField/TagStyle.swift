@@ -1,5 +1,5 @@
 //
-//  Style.swift
+//  TagStyle.swift
 //  TagField
 //
 //  Created by Yuma Matsune on 2018/03/02.
@@ -8,15 +8,15 @@
 
 import Foundation
 
-public struct Style<View: UIView> {
+public struct TagStyle {
     
-    public let style: (View) -> Void
+    public let style: (TagView) -> Void
     
-    public init(_ style: @escaping (View) -> Void) {
+    public init(_ style: @escaping (TagView) -> Void) {
         self.style = style
     }
     
-    public func apply(to view: View) {
+    public func apply(to view: TagView) {
         style(view)
     }
 }

@@ -13,8 +13,7 @@
 		13B01E502019C5C800FF0664 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 13B01E4E2019C5C800FF0664 /* Main.storyboard */; };
 		13B01E522019C5C800FF0664 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B01E512019C5C800FF0664 /* Assets.xcassets */; };
 		13B01E552019C5C800FF0664 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 13B01E532019C5C800FF0664 /* LaunchScreen.storyboard */; };
-		13CCF84020492D8900F8D881 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13CCF83F20492D8900F8D881 /* UIViewExtension.swift */; };
-		13CCF84220492DA900F8D881 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13CCF84120492DA900F8D881 /* Style.swift */; };
+		13CCF84220492DA900F8D881 /* TagStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13CCF84120492DA900F8D881 /* TagStyle.swift */; };
 		13F0DA33201AE2B9005AB54A /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B60D201A20E100AFDCA5 /* PaddingLabel.swift */; };
 		13F0DA34201AE2B9005AB54A /* TagFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B611201A213600AFDCA5 /* TagFieldDelegate.swift */; };
 		13F0DA36201AE2B9005AB54A /* TagFieldContentTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1306B613201A399E00AFDCA5 /* TagFieldContentTextField.swift */; };
@@ -63,8 +62,7 @@
 		13B01E512019C5C800FF0664 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		13B01E542019C5C800FF0664 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		13B01E562019C5C800FF0664 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		13CCF83F20492D8900F8D881 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
-		13CCF84120492DA900F8D881 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
+		13CCF84120492DA900F8D881 /* TagStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagStyle.swift; sourceTree = "<group>"; };
 		13F0DA40201B52AA005AB54A /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -115,8 +113,7 @@
 				1306B60F201A210900AFDCA5 /* TagField.swift */,
 				1306B611201A213600AFDCA5 /* TagFieldDelegate.swift */,
 				13F0DA40201B52AA005AB54A /* TagView.swift */,
-				13CCF83F20492D8900F8D881 /* UIViewExtension.swift */,
-				13CCF84120492DA900F8D881 /* Style.swift */,
+				13CCF84120492DA900F8D881 /* TagStyle.swift */,
 			);
 			path = TagField;
 			sourceTree = "<group>";
@@ -249,12 +246,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13CCF84020492D8900F8D881 /* UIViewExtension.swift in Sources */,
 				13F0DA36201AE2B9005AB54A /* TagFieldContentTextField.swift in Sources */,
 				13F0DA34201AE2B9005AB54A /* TagFieldDelegate.swift in Sources */,
 				13F0DA37201AE2B9005AB54A /* TagField.swift in Sources */,
 				13F0DA33201AE2B9005AB54A /* PaddingLabel.swift in Sources */,
-				13CCF84220492DA900F8D881 /* Style.swift in Sources */,
+				13CCF84220492DA900F8D881 /* TagStyle.swift in Sources */,
 				13F0DA41201B52AA005AB54A /* TagView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -152,3 +152,9 @@ open class TagView: UIView {
         }
     }
 }
+
+extension TagView {
+    public func apply(_ style: TagStyle) {
+        style.apply(to: self)
+    }
+}

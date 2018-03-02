@@ -9,9 +9,14 @@
 import Foundation
 import UIKit
 
+public protocol TagFieldDataSource: class {
+    func styleForTag(at index: Int) -> TagStyle
+}
+
 open class TagField: UIScrollView {
     
     weak open var tagDelegate: TagFieldDelegate?
+    weak open var dataSource: TagFieldDataSource?
     
     private var tagViews: [TagView] = []
     
@@ -37,7 +42,6 @@ open class TagField: UIScrollView {
     open var font: UIFont? {
         didSet {
             textField.font = font
-            tagViews.forEach { $0.font = font }
         }
     }
     
@@ -65,40 +69,14 @@ open class TagField: UIScrollView {
     
     private var TagViewClassType = TagView.self
     
-    // MARK: - TagView Properties
-    open var tagPadding = UIEdgeInsets(top: 5, left: 8, bottom: 5, right: 8) {
-        didSet {
-            tagViews.forEach { $0.padding = tagPadding }
-        }
-    }
-    
-    open var tagTextColor: UIColor = .white {
-        didSet {
-            tagViews.forEach { $0.normalTextColor = tagTextColor }
-        }
-    }
-    
-    open var tagBackgroundColor: UIColor = .orange {
-        didSet {
-            tagViews.forEach { $0.normalBackgroundColor = tagBackgroundColor }
-        }
-    }
-    
-    open var tagSelectedTextColor: UIColor = .white {
-        didSet {
-            tagViews.forEach { $0.selectedTextColor = tagSelectedTextColor }
-        }
-    }
-    
-    open var tagSelectedBackgroundColor: UIColor = .red {
-        didSet {
-            tagViews.forEach { $0.selectedBackgroundColor = tagSelectedBackgroundColor }
-        }
-    }
-    
-    open var tagCornerRadius: CGFloat = 8.0 {
-        didSet {
-            tagViews.forEach { $0.cornerRadius = tagCornerRadius }
+    private var defaultStyle: TagStyle {
+        return TagStyle {
+            $0.padding = UIEdgeInsets(top: 4, left: 2, bottom: 3, right: 4)
+            $0.normalTextColor = .white
+            $0.normalBackgroundColor = .orange
+            $0.selectedTextColor = .white
+            $0.selectedBackgroundColor = .red
+            $0.cornerRadius = 8.0
         }
     }
     
@@ -259,12 +237,6 @@ open class TagField: UIScrollView {
         let tagView = TagViewClassType.init()
         tagView.text = text
         tagView.font = font
-        tagView.padding = tagPadding
-        tagView.normalTextColor = tagTextColor
-        tagView.normalBackgroundColor = tagBackgroundColor
-        tagView.selectedTextColor = tagSelectedTextColor
-        tagView.selectedBackgroundColor = tagSelectedBackgroundColor
-        tagView.cornerRadius = tagCornerRadius
         tagView.onTapLabel = onTapTagLabel
         tagView.onTapDelete = onTapTagDelete
         return tagView
@@ -286,13 +258,12 @@ open class TagField: UIScrollView {
         var y: CGFloat = padding.top
         
         // - tagLabels position
-        var isFirstTag = true
-        for tagView in tagViews {
-            let tagSize = tagView.intrinsicContentSize
+        for i in 0..<tagViews.count {
+            let tagSize = tagViews[i].intrinsicContentSize
             var availableWidth = bounds.width - x - (padding.right + sideInset.right)
             
             if tagSize.width > availableWidth {
-                if !isFirstTag {
+                if i != 0 {
                     // new line
                     numberOfLines += 1
                     sideInset = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines) ?? (0, 0)
@@ -306,15 +277,17 @@ open class TagField: UIScrollView {
                 
                 if tagSize.width > availableWidth {
                     // clipping
-                    tagView.frame = CGRect(x: x, y: y, width: availableWidth, height: tagSize.height)
+                    tagViews[i].frame = CGRect(x: x, y: y, width: availableWidth, height: tagSize.height)
                 } else {
-                    tagView.frame = CGRect(origin: CGPoint(x: x, y: y), size: tagSize)
+                    tagViews[i].frame = CGRect(origin: CGPoint(x: x, y: y), size: tagSize)
                 }
             } else {
-                tagView.frame = CGRect(origin: CGPoint(x: x, y: y), size: tagSize)
+                tagViews[i].frame = CGRect(origin: CGPoint(x: x, y: y), size: tagSize)
             }
+            
+            tagViews[i].apply(dataSource?.styleForTag(at: i) ?? defaultStyle)
+            
             x += tagSize.width + tagBetweenSpace
-            isFirstTag = false
         }
         
         // - textField position
