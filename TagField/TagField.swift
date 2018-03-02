@@ -294,6 +294,10 @@ open class TagField: UIScrollView {
                 x = padding.left + sideInset.left
                 y += tagViewHeight + lineBetweenSpace
                 availableWidth = bounds.width - x - (padding.right + sideInset.right)
+            } else {
+                if let centerY = tagViews.last?.center.y {
+                    y = centerY - tagViewHeight / 2
+                }
             }
             textField.frame.size = CGSize(width: availableWidth, height: tagViewHeight)
             textField.frame.origin = CGPoint(x: x, y: y)

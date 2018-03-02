@@ -58,7 +58,7 @@ final class ViewController: UIViewController {
         tagField.placeholder = "add tag..."
         tagField.tagDelegate = self
         tagField.padding.top = 8
-        tagField.lineBetweenSpace = 8
+        tagField.lineBetweenSpace = 13
         tagField.dataSource = self
         
         tagField.append(tags: ["tag1", "tag2"])
@@ -136,7 +136,8 @@ extension ViewController: TagFieldDataSource {
         return TagStyle {
             $0.normalTextColor = .white
             $0.normalBackgroundColor = index == 0 ? UIColor(red: 0.2, green: 0.48, blue: 0.84, alpha: 1.0) : .orange
-            $0.cornerRadius = 4.0
+            $0.cornerRadius = 7.0
+            $0.padding = UIEdgeInsets(top: 5, left: 5, bottom: 6, right: 5)
         }
     }
     
