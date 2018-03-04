@@ -57,7 +57,6 @@ final class ViewController: UIViewController {
         tagField.registerTagView(CustomTagView.self)
         tagField.placeholder = "add tag..."
         tagField.tagDelegate = self
-        tagField.yOffsetForCarret = 6
         tagField.padding.top = 8
         tagField.lineBetweenSpace = 13
         tagField.dataSource = self

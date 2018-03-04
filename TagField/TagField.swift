@@ -27,8 +27,6 @@ open class TagField: UIScrollView {
     
     open var textFieldMinWidth: CGFloat = 20
     
-    open var yOffsetForCarret: CGFloat = 0
-    
     open var padding = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10) {
         didSet {
             setNeedsLayout()
@@ -242,10 +240,6 @@ open class TagField: UIScrollView {
         return tagViews.contains(where: { $0.text == tag })
     }
     
-    private lazy var tagViewHeight: CGFloat = {
-        return createTagView(text: "a").intrinsicContentSize.height
-    }()
-    
     public func repositionSubviews() {
         numberOfLines = 1
         
@@ -267,7 +261,7 @@ open class TagField: UIScrollView {
                     sideInset = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines) ?? (0, 0)
                     // reset point
                     x = padding.left + sideInset.left
-                    y += tagViewHeight + lineBetweenSpace
+                    y = tagViews[i - 1].frame.maxY + lineBetweenSpace
                     
                     // refresh available width
                     availableWidth = bounds.width - x - (padding.right + sideInset.right)
@@ -296,11 +290,19 @@ open class TagField: UIScrollView {
                 numberOfLines += 1
                 sideInset = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines) ?? (0, 0)
                 x = padding.left + sideInset.left
-                y += tagViewHeight + lineBetweenSpace
+                y = (tagViews.last?.frame.maxY ?? 0) + lineBetweenSpace
                 availableWidth = bounds.width - x - (padding.right + sideInset.right)
             }
-            textField.frame.size = CGSize(width: availableWidth, height: tagViewHeight)
-            textField.frame.origin = CGPoint(x: x, y: y + yOffsetForCarret)
+            let height: CGFloat
+            if let last = tagViews.last {
+                height = last.intrinsicContentSize.height
+            } else {
+                let virtualTagView = createTagView(text: "a")
+                virtualTagView.apply(dataSource?.tagField(self, styleForTagAt: 0) ?? defaultStyle)
+                height = virtualTagView.intrinsicContentSize.height
+            }
+            textField.frame.size = CGSize(width: availableWidth, height: height)
+            textField.frame.origin = CGPoint(x: x, y: y)
             intrinsicContentHeight = textField.frame.maxY
         }
         
