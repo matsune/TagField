@@ -255,6 +255,8 @@ open class TagField: UIScrollView {
         
         // - tagLabels position
         for i in 0..<tagViews.count {
+            tagViews[i].apply(dataSource?.tagField(self, styleForTagAt: i) ?? defaultStyle)
+            
             let tagSize = tagViews[i].intrinsicContentSize
             var availableWidth = bounds.width - x - (padding.right + sideInset.right)
             
@@ -281,7 +283,7 @@ open class TagField: UIScrollView {
                 tagViews[i].frame = CGRect(origin: CGPoint(x: x, y: y), size: tagSize)
             }
             
-            tagViews[i].apply(dataSource?.tagField(self, styleForTagAt: i) ?? defaultStyle)
+            intrinsicContentHeight = tagViews[i].frame.maxY
             
             x += tagSize.width + (dataSource?.tagField(self, interTagSpacingAt: i) ?? 2.0)
         }
@@ -297,19 +299,22 @@ open class TagField: UIScrollView {
                 y += tagViewHeight + lineBetweenSpace
                 availableWidth = bounds.width - x - (padding.right + sideInset.right)
             }
-            y += yOffsetForCarret
             textField.frame.size = CGSize(width: availableWidth, height: tagViewHeight)
-            textField.frame.origin = CGPoint(x: x, y: y)
+            textField.frame.origin = CGPoint(x: x, y: y + yOffsetForCarret)
+            intrinsicContentHeight = textField.frame.maxY
         }
         
         textField.isHiddenPlaceholder = !tags.isEmpty || placeholderImageView != nil
-        placeholderImageView?.frame.origin = CGPoint(x: x + 5, y: y)
-        placeholderImageView?.isHidden = !tags.isEmpty
+        if placeholderImageView != nil {
+            placeholderImageView?.frame.origin = CGPoint(x: x + 5, y: y)
+            placeholderImageView?.isHidden = !tags.isEmpty
+            intrinsicContentHeight = placeholderImageView!.frame.maxY
+        }
 
-        intrinsicContentHeight = y + tagViewHeight - padding.top
+        intrinsicContentHeight += padding.bottom
         invalidateIntrinsicContentSize()
         
-        contentSize = CGSize(width: bounds.width, height: intrinsicContentHeight + padding.top + padding.bottom)
+        contentSize = CGSize(width: bounds.width, height: intrinsicContentHeight)
     }
     
     private func onTapTagLabel(_ tagView: TagView) {
