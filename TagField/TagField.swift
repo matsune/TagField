@@ -51,7 +51,7 @@ open class TagField: UIScrollView {
         }
     }
     
-    public var numberOfLines = 1
+    public var numberOfLines = 0
     
     private var intrinsicContentHeight: CGFloat = 50
     
