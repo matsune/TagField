@@ -51,7 +51,7 @@ open class TagField: UIScrollView {
         }
     }
     
-    public private(set) var numberOfLines = 1
+    public var numberOfLines = 1
     
     private var intrinsicContentHeight: CGFloat = 50
     
@@ -241,9 +241,8 @@ open class TagField: UIScrollView {
     }
     
     public func repositionSubviews() {
-        numberOfLines = 1
-        
-        var sideInset: (left: CGFloat, right: CGFloat) = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines) ?? (0, 0)
+        var line = 1
+        var sideInset: (left: CGFloat, right: CGFloat) = tagDelegate?.tagField(self, sideInsetAtLine: line) ?? (0, 0)
         var x: CGFloat = padding.left + sideInset.left
         var y: CGFloat = padding.top
         
@@ -257,14 +256,20 @@ open class TagField: UIScrollView {
             if tagSize.width > availableWidth {
                 if i != 0 {
                     // new line
-                    numberOfLines += 1
-                    sideInset = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines) ?? (0, 0)
-                    // reset point
-                    x = padding.left + sideInset.left
-                    y = tagViews[i - 1].frame.maxY + lineBetweenSpace
-                    
-                    // refresh available width
-                    availableWidth = bounds.width - x - (padding.right + sideInset.right)
+                    line += 1
+                    if isReadonly && numberOfLines > 0 && numberOfLines < line {
+                        // clip label if over `numberOflines`
+                        tagViews[i].frame = CGRect(x: x, y: y, width: availableWidth, height: tagSize.height)
+                        break
+                    } else {
+                        sideInset = tagDelegate?.tagField(self, sideInsetAtLine: line) ?? (0, 0)
+                        // reset point
+                        x = padding.left + sideInset.left
+                        y = tagViews[i - 1].frame.maxY + lineBetweenSpace
+                        
+                        // refresh available width
+                        availableWidth = bounds.width - x - (padding.right + sideInset.right)
+                    }
                 }
                 
                 if tagSize.width > availableWidth {
@@ -287,8 +292,8 @@ open class TagField: UIScrollView {
             var availableWidth = bounds.width - x - (padding.right + sideInset.right)
             if availableWidth < textFieldMinWidth {
                 // textField start next line
-                numberOfLines += 1
-                sideInset = tagDelegate?.tagField(self, sideInsetAtLine: numberOfLines) ?? (0, 0)
+                line += 1
+                sideInset = tagDelegate?.tagField(self, sideInsetAtLine: line) ?? (0, 0)
                 x = padding.left + sideInset.left
                 y = (tagViews.last?.frame.maxY ?? 0) + lineBetweenSpace
                 availableWidth = bounds.width - x - (padding.right + sideInset.right)
