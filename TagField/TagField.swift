@@ -311,10 +311,10 @@ open class TagField: UIScrollView {
             intrinsicContentHeight = textField.frame.maxY
         }
         
-        textField.isHiddenPlaceholder = !tags.isEmpty || placeholderImageView != nil
+        textField.isHiddenPlaceholder = !tags.isEmpty || !(text?.isEmpty ?? false) || placeholderImageView != nil
         if placeholderImageView != nil {
             placeholderImageView?.frame.origin = CGPoint(x: x + 5, y: y)
-            placeholderImageView?.isHidden = !tags.isEmpty
+            placeholderImageView?.isHidden = !tags.isEmpty || !(text?.isEmpty ?? false)
             intrinsicContentHeight = placeholderImageView!.frame.maxY
         }
 
