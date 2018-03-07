@@ -151,6 +151,22 @@ open class TagView: UIView {
             deleteButton?.alpha = 0.0
         }
     }
+    
+    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let view = super.hitTest(point, with: event)
+        if isDeleteButton(inside: point, with: event) {
+            return deleteButton
+        }
+        return view
+    }
+    
+    open func isDeleteButton(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        if let p = deleteButton?.convert(point, from: self),
+            deleteButton?.point(inside: p, with: event) ?? false {
+            return true
+        }
+        return false
+    }
 }
 
 extension TagView {
