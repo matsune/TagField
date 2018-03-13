@@ -14,11 +14,11 @@ open class TagField: UIScrollView {
     weak open var tagDelegate: TagFieldDelegate?
     weak open var dataSource: TagFieldDataSource?
     
-    private var tagViews: [TagView] = []
-    
     public let textField = TagFieldContentTextField()
     
     // MARK: - Stored properties
+    open var tagViews: [TagView] = []
+    
     open var delimiter: String?
     
     open var lineBetweenSpace: CGFloat = 3.0
@@ -80,7 +80,7 @@ open class TagField: UIScrollView {
     }
     
     override open var intrinsicContentSize: CGSize {
-        return CGSize(width: bounds.width - (padding.left + padding.right), height: intrinsicContentHeight)
+        return CGSize(width: bounds.width, height: intrinsicContentHeight)
     }
     
     private var selectedTagViews: [TagView] {
@@ -259,7 +259,10 @@ open class TagField: UIScrollView {
                     line += 1
                     if isReadonly && numberOfLines > 0 && numberOfLines < line {
                         // clip label if over `numberOflines`
-                        tagViews[i].frame = CGRect(x: x, y: y, width: availableWidth, height: tagSize.height)
+                        let minimumWidth: CGFloat = 10
+                        if availableWidth > minimumWidth {
+                            tagViews[i].frame = CGRect(x: x, y: y, width: availableWidth, height: tagSize.height)
+                        }
                         break
                     } else {
                         sideInset = tagDelegate?.tagField(self, sideInsetAtLine: line) ?? (0, 0)
