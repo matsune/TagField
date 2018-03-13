@@ -12,6 +12,7 @@ open class TagView: UIView {
 
     // MARK: - Subviews
     private let label = PaddingLabel()
+    
     public var deleteButton: UIButton? {
         didSet {
             oldValue?.removeFromSuperview()
@@ -54,6 +55,16 @@ open class TagView: UIView {
     public var cornerRadius: CGFloat {
         set { label.layer.cornerRadius = newValue }
         get { return label.layer.cornerRadius }
+    }
+    
+    public var textAlignment: NSTextAlignment {
+        set { label.textAlignment = newValue }
+        get { return label.textAlignment}
+    }
+    
+    public var lineBreakMode: NSLineBreakMode {
+        set { label.lineBreakMode = newValue }
+        get { return label.lineBreakMode }
     }
     
     // MARK: - Initializer
