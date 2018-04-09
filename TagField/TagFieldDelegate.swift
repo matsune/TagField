@@ -23,7 +23,6 @@ public protocol TagFieldDelegate: class {
     func tagFieldShouldEndEditing(_ tagField: TagField) -> Bool
     func tagFieldShouldBeginEditing(_ tagField: TagField) -> Bool
     
-    func tagField(_ tagField: TagField, sideInsetAtLine line: Int) -> (left: CGFloat, right: CGFloat)
 }
 
 public extension TagFieldDelegate {
@@ -55,9 +54,5 @@ public extension TagFieldDelegate {
     
     func tagFieldShouldBeginEditing(_ tagField: TagField) -> Bool {
         return true
-    }
-    
-    func tagField(_ tagField: TagField, sideInsetAtLine line: Int) -> (left: CGFloat, right: CGFloat) {
-        return (left: 0, right: 0)
     }
 }

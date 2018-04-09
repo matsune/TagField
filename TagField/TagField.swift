@@ -242,7 +242,7 @@ open class TagField: UIScrollView {
     
     public func repositionSubviews() {
         var line = 1
-        var sideInset: (left: CGFloat, right: CGFloat) = tagDelegate?.tagField(self, sideInsetAtLine: line) ?? (0, 0)
+        var sideInset: (left: CGFloat, right: CGFloat) = dataSource?.tagField(self, sideInsetAtLine: line) ?? (0, 0)
         var x: CGFloat = padding.left + sideInset.left
         var y: CGFloat = padding.top
         
@@ -265,7 +265,7 @@ open class TagField: UIScrollView {
                         }
                         break
                     } else {
-                        sideInset = tagDelegate?.tagField(self, sideInsetAtLine: line) ?? (0, 0)
+                        sideInset = dataSource?.tagField(self, sideInsetAtLine: line) ?? (0, 0)
                         // reset point
                         x = padding.left + sideInset.left
                         y = tagViews[i - 1].frame.maxY + lineBetweenSpace
@@ -296,7 +296,7 @@ open class TagField: UIScrollView {
             if availableWidth < textFieldMinWidth {
                 // textField start next line
                 line += 1
-                sideInset = tagDelegate?.tagField(self, sideInsetAtLine: line) ?? (0, 0)
+                sideInset = dataSource?.tagField(self, sideInsetAtLine: line) ?? (0, 0)
                 x = padding.left + sideInset.left
                 y = (tagViews.last?.frame.maxY ?? 0) + lineBetweenSpace
                 availableWidth = bounds.width - x - (padding.right + sideInset.right)

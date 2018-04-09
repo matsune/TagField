@@ -11,10 +11,15 @@ import Foundation
 public protocol TagFieldDataSource: class {
     func tagField(_ tagField: TagField, styleForTagAt index: Int) -> TagStyle
     func tagField(_ tagField: TagField, interTagSpacingAt index: Int) -> CGFloat
+    func tagField(_ tagField: TagField, sideInsetAtLine line: Int) -> (left: CGFloat, right: CGFloat)
 }
 
 extension TagFieldDataSource {
     func tagField(_ tagField: TagField, interTagSpacingAt index: Int) -> CGFloat {
         return 2.0
+    }
+    
+    func tagField(_ tagField: TagField, sideInsetAtLine line: Int) -> (left: CGFloat, right: CGFloat) {
+        return (left: 0, right: 0)
     }
 }
