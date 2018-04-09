@@ -14,7 +14,7 @@ public protocol TagFieldDataSource: class {
     func tagField(_ tagField: TagField, sideInsetAtLine line: Int) -> (left: CGFloat, right: CGFloat)
 }
 
-extension TagFieldDataSource {
+public extension TagFieldDataSource {
     func tagField(_ tagField: TagField, interTagSpacingAt index: Int) -> CGFloat {
         return 2.0
     }
