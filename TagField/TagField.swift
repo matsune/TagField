@@ -76,7 +76,7 @@ open class TagField: UIScrollView {
     
     // MARK: - Computed Properties
     public var tags: [String] {
-        return tagViews.flatMap { $0.text }
+        return tagViews.compactMap { $0.text }
     }
     
     override open var intrinsicContentSize: CGSize {
