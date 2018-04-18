@@ -121,13 +121,6 @@ extension ViewController: TagFieldDelegate {
         print("shouldEndEditing")
         return true
     }
-    
-    func tagField(_ tagField: TagField, sideInsetAtLine line: Int) -> (left: CGFloat, right: CGFloat) {
-        if line == 1 {
-            return (30, 0)
-        }
-        return (0, 0)
-    }
 }
 
 extension ViewController: TagFieldDataSource {
@@ -138,6 +131,7 @@ extension ViewController: TagFieldDataSource {
             $0.normalBackgroundColor = index == 0 ? UIColor(red: 0.2, green: 0.48, blue: 0.84, alpha: 1.0) : .orange
             $0.cornerRadius = 7.0
             $0.padding = UIEdgeInsets(top: 5, left: 5, bottom: 6, right: 5)
+            $0.lineBreakMode = .byClipping
         }
     }
     
