@@ -9,13 +9,13 @@
 import Foundation
 import UIKit
 
-class PaddingLabel: UILabel {
+open class PaddingLabel: UILabel {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -25,19 +25,19 @@ class PaddingLabel: UILabel {
         }
     }
     
-    override func drawText(in rect: CGRect) {
+    override open func drawText(in rect: CGRect) {
         let newRect = UIEdgeInsetsInsetRect(rect, padding)
         super.drawText(in: newRect)
     }
     
-    override var intrinsicContentSize: CGSize {
+    override open var intrinsicContentSize: CGSize {
         var intrinsicContentSize = super.intrinsicContentSize
         intrinsicContentSize.width += (padding.left + padding.right)
         intrinsicContentSize.height += (padding.top + padding.bottom)
         return intrinsicContentSize
     }
     
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
+    override open func sizeThatFits(_ size: CGSize) -> CGSize {
         let fittingSize = CGSize(width: size.width - (padding.left + padding.right),
                                  height: size.height - (padding.top + padding.bottom))
         let labelSize = super.sizeThatFits(fittingSize)

@@ -11,7 +11,7 @@ import Foundation
 open class TagView: UIView {
 
     // MARK: - Subviews
-    private let label = PaddingLabel()
+    public let titleLabel = PaddingLabel()
     
     public var deleteButton: UIButton? {
         didSet {
@@ -34,43 +34,42 @@ open class TagView: UIView {
     
     // MARK: - Computed Properties
     override open var intrinsicContentSize: CGSize {
-        return label.intrinsicContentSize
+        return titleLabel.intrinsicContentSize
     }
     
     public var padding: UIEdgeInsets {
-        set { label.padding = newValue }
-        get { return label.padding }
+        set { titleLabel.padding = newValue }
+        get { return titleLabel.padding }
     }
     
     public var font: UIFont! {
-        set { label.font = newValue }
-        get { return label.font }
+        set { titleLabel.font = newValue }
+        get { return titleLabel.font }
     }
     
     public var text: String? {
-        set { label.text = newValue }
-        get { return label.text }
+        set { titleLabel.text = newValue }
+        get { return titleLabel.text }
     }
     
     public var cornerRadius: CGFloat {
-        set { label.layer.cornerRadius = newValue }
-        get { return label.layer.cornerRadius }
+        set { titleLabel.layer.cornerRadius = newValue }
+        get { return titleLabel.layer.cornerRadius }
     }
     
     public var textAlignment: NSTextAlignment {
-        set { label.textAlignment = newValue }
-        get { return label.textAlignment}
+        set { titleLabel.textAlignment = newValue }
+        get { return titleLabel.textAlignment}
     }
     
     public var lineBreakMode: NSLineBreakMode {
-        set { label.lineBreakMode = newValue }
-        get { return label.lineBreakMode }
+        set { titleLabel.lineBreakMode = newValue }
+        get { return titleLabel.lineBreakMode }
     }
     
     // MARK: - Initializer
-    override public init(frame: CGRect) {
-        super.init(frame: frame)
-        label.frame = frame
+    required public init() {
+        super.init(frame: .zero)
         setup()
     }
     
@@ -79,25 +78,19 @@ open class TagView: UIView {
         setup()
     }
     
-    public init(text: String?) {
-        super.init(frame: .zero)
-        label.text = text
-        setup()
-    }
-    
     private func setup() {
         backgroundColor = .clear
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TagView.handleTap(_:)))
-        label.addGestureRecognizer(tapGesture)
-        label.layer.masksToBounds = true
-        label.isUserInteractionEnabled = true
-        addSubview(label)
+        titleLabel.addGestureRecognizer(tapGesture)
+        titleLabel.layer.masksToBounds = true
+        titleLabel.isUserInteractionEnabled = true
+        addSubview(titleLabel)
     }
     
     override open func layoutSubviews() {
         super.layoutSubviews()
-        label.frame = bounds
+        titleLabel.frame = bounds
     }
     
     @objc
@@ -142,27 +135,6 @@ open class TagView: UIView {
         updateView(animated: animated)
     }
     
-    // MARK: - Private Methods
-    private func updateView(animated: Bool) {
-        let duration = animated ? animationDuration : 0.0
-        UIView.transition(with: label,
-                          duration: duration,
-                          options: .transitionCrossDissolve,
-                          animations: updateContent, completion: nil)
-    }
-    
-    private func updateContent() {
-        if isSelected {
-            label.backgroundColor = self.selectedBackgroundColor
-            label.textColor = self.selectedTextColor
-            deleteButton?.alpha = 1.0
-        } else {
-            label.backgroundColor = self.normalBackgroundColor
-            label.textColor = self.normalTextColor
-            deleteButton?.alpha = 0.0
-        }
-    }
-    
     open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         let view = super.hitTest(point, with: event)
         if isDeleteButton(inside: point, with: event) {
@@ -171,7 +143,28 @@ open class TagView: UIView {
         return view
     }
     
-    open func isDeleteButton(inside point: CGPoint, with event: UIEvent?) -> Bool {
+    // MARK: - Private Methods
+    private func updateView(animated: Bool) {
+        let duration = animated ? animationDuration : 0.0
+        UIView.transition(with: titleLabel,
+                          duration: duration,
+                          options: .transitionCrossDissolve,
+                          animations: updateContent, completion: nil)
+    }
+    
+    private func updateContent() {
+        if isSelected {
+            titleLabel.backgroundColor = self.selectedBackgroundColor
+            titleLabel.textColor = self.selectedTextColor
+            deleteButton?.alpha = 1.0
+        } else {
+            titleLabel.backgroundColor = self.normalBackgroundColor
+            titleLabel.textColor = self.normalTextColor
+            deleteButton?.alpha = 0.0
+        }
+    }
+    
+    private func isDeleteButton(inside point: CGPoint, with event: UIEvent?) -> Bool {
         if let p = deleteButton?.convert(point, from: self),
             deleteButton?.point(inside: p, with: event) ?? false {
             return true

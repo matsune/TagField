@@ -9,37 +9,37 @@
 import Foundation
 import UIKit
 
-open class TagField: UIScrollView {
+final public class TagField: UIScrollView {
     
-    weak open var tagDelegate: TagFieldDelegate?
-    weak open var dataSource: TagFieldDataSource?
+    weak public var tagDelegate: TagFieldDelegate?
+    weak public var dataSource: TagFieldDataSource?
     
     public let textField = TagFieldContentTextField()
     
     // MARK: - Stored properties
-    open var tagViews: [TagView] = []
+    public var tagViews: [TagView] = []
     
-    open var delimiter: String?
+    public var delimiter: String?
     
-    open var lineBetweenSpace: CGFloat = 3.0
+    public var lineBetweenSpace: CGFloat = 3.0
     
-    open var allowMultipleSelection = false
+    public var allowMultipleSelection = false
     
-    open var textFieldMinWidth: CGFloat = 20
+    public var textFieldMinWidth: CGFloat = 20
     
-    open var padding = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10) {
+    public var padding = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10) {
         didSet {
             setNeedsLayout()
         }
     }
     
-    open var font: UIFont? {
+    public var font: UIFont? {
         didSet {
             textField.font = font
         }
     }
     
-    open var isReadonly = false {
+    public var isReadonly = false {
         didSet {
             if isReadonly {
                 textField.resignFirstResponder()
@@ -60,8 +60,6 @@ open class TagField: UIScrollView {
             textField.isHiddenCaret = isHiddenCaret
         }
     }
-    
-    private var TagViewClassType = TagView.self
     
     private var defaultStyle: TagStyle {
         return TagStyle {
@@ -92,7 +90,7 @@ open class TagField: UIScrollView {
         get { return textField.placeholder }
     }
     
-    open var placeholderImageView: UIImageView?
+    public var placeholderImageView: UIImageView?
     
     public func setPlaceholderImage(_ image: UIImage?) {
         if let newValue = image {
@@ -142,27 +140,23 @@ open class TagField: UIScrollView {
     }
     
     // MARK: - Public Methods
-    open override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         repositionSubviews()
     }
     
     @discardableResult
-    open override func becomeFirstResponder() -> Bool {
+    public override func becomeFirstResponder() -> Bool {
         isHiddenCaret = false
         return textField.becomeFirstResponder()
     }
     
     @discardableResult
-    open override func resignFirstResponder() -> Bool {
+    public override func resignFirstResponder() -> Bool {
         deselectAllTags(animated: true)
         tokenizeTextField()
         isHiddenCaret = true
         return textField.resignFirstResponder()
-    }
-    
-    public func registerTagView(_ classType: TagView.Type) {
-        self.TagViewClassType = classType
     }
     
     public func append(tag: String) {
@@ -171,7 +165,7 @@ open class TagField: UIScrollView {
             return
         }
         
-        let tagView = createTagView(text: tag)
+        let tagView = createTagView(text: tag, index: tags.count)
         addSubview(tagView)
         tagViews.append(tagView)
         repositionSubviews()
@@ -180,13 +174,11 @@ open class TagField: UIScrollView {
     }
     
     public func append(tags: [String]) {
-        tags
-            .filter { !isExistTag($0) }
-            .map { createTagView(text: $0) }
-            .forEach {
-                addSubview($0)
-                tagViews.append($0)
-            }
+        for i in 0..<tags.filter( { !isExistTag($0) }).count {
+            let tagView = createTagView(text: tags[i], index: tagViews.count)
+            addSubview(tagView)
+            tagViews.append(tagView)
+        }
         repositionSubviews()
         
         tagDelegate?.tagField(self, didChange: tags)
@@ -209,10 +201,10 @@ open class TagField: UIScrollView {
     public func setTags(_ tags: [String]) {
         tagViews.forEach { $0.removeFromSuperview() }
         tagViews.removeAll()
-        tags.map { createTagView(text: $0) }
-            .forEach {
-                addSubview($0)
-                tagViews.append($0)
+        for i in 0..<tags.count {
+            let tagView = createTagView(text: tags[i], index: i)
+            addSubview(tagView)
+            tagViews.append(tagView)
         }
         repositionSubviews()
         tagDelegate?.tagField(self, didChange: tags)
@@ -227,8 +219,8 @@ open class TagField: UIScrollView {
         }
     }
     
-    private func createTagView(text: String) -> TagView {
-        let tagView = TagViewClassType.init()
+    private func createTagView(text: String, index: Int) -> TagView {
+        let tagView = (dataSource?.tagField(self, classForTagAt: index) ?? TagView.self).init()
         tagView.text = text
         tagView.font = font
         tagView.onTapLabel = onTapTagLabel
@@ -305,7 +297,7 @@ open class TagField: UIScrollView {
             if let last = tagViews.last {
                 height = last.intrinsicContentSize.height
             } else {
-                let virtualTagView = createTagView(text: "a")
+                let virtualTagView = createTagView(text: "a", index: 0)
                 virtualTagView.apply(dataSource?.tagField(self, styleForTagAt: 0) ?? defaultStyle)
                 height = virtualTagView.intrinsicContentSize.height
             }
