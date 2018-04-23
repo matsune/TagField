@@ -19,7 +19,7 @@ open class PaddingLabel: UILabel {
         super.init(coder: aDecoder)
     }
     
-    var padding = UIEdgeInsets.zero {
+    open var padding = UIEdgeInsets.zero {
         didSet {
             setNeedsDisplay()
         }
@@ -45,7 +45,7 @@ open class PaddingLabel: UILabel {
                       height: labelSize.height + (padding.top + padding.bottom))
     }
     
-    func sizeToFit(_ size: CGSize) -> CGSize {
+    open func sizeToFit(_ size: CGSize) -> CGSize {
         if intrinsicContentSize.width > size.width {
             return CGSize(width: size.width,
                           height: self.frame.size.height)
