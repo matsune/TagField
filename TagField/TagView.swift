@@ -68,6 +68,12 @@ open class TagView: UIView {
     }
     
     // MARK: - Initializer
+    public init(text: String?) {
+        super.init(frame: .zero)
+        titleLabel.text = text
+        setup()
+    }
+    
     required public init() {
         super.init(frame: .zero)
         setup()
