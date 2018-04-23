@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-final public class TagField: UIScrollView {
+open class TagField: UIScrollView {
     
     weak public var tagDelegate: TagFieldDelegate?
     weak public var dataSource: TagFieldDataSource?
@@ -140,19 +140,19 @@ final public class TagField: UIScrollView {
     }
     
     // MARK: - Public Methods
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         repositionSubviews()
     }
     
     @discardableResult
-    public override func becomeFirstResponder() -> Bool {
+    open override func becomeFirstResponder() -> Bool {
         isHiddenCaret = false
         return textField.becomeFirstResponder()
     }
     
     @discardableResult
-    public override func resignFirstResponder() -> Bool {
+    open override func resignFirstResponder() -> Bool {
         deselectAllTags(animated: true)
         tokenizeTextField()
         isHiddenCaret = true
