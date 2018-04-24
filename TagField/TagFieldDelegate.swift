@@ -12,7 +12,7 @@ import UIKit
 public protocol TagFieldDelegate: class {
     func tagField(_ tagField: TagField, didSelect tag: String?)
     func tagField(_ tagField: TagField, didAppend tags: [String?])
-    func tagField(_ tagField: TagField, didRemove tags: [String?])
+    func tagField(_ tagField: TagField, didRemove tags: [String?], at indexes: [Int])
     
     func tagFieldDidChangeText(_ tagField: TagField)
     func tagFieldShouldReturn(_ tagField: TagField) -> Bool
@@ -32,7 +32,7 @@ public extension TagFieldDelegate {
     
     func tagField(_ tagField: TagField, didAppend tags: [String?]) {}
     
-    func tagField(_ tagField: TagField, didRemove tags: [String?]) {}
+    func tagField(_ tagField: TagField, didRemove tags: [String?], at indexes: [Int]) {}
     
     func tagFieldDidChangeText(_ tagField: TagField) {}
     

@@ -59,8 +59,8 @@ extension ViewController: TagFieldDelegate {
         print("didAppend: \(tags)")
     }
     
-    func tagField(_ tagField: TagField, didRemove tags: [String?]) {
-        print("didRemove: \(tags)")
+    func tagField(_ tagField: TagField, didRemove tags: [String?], at indexes: [Int]) {
+        print("didRemove: \(tags) at \(indexes)")
     }
     
     func tagFieldShouldReturn(_ tagField: TagField) -> Bool {
