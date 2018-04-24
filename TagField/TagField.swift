@@ -21,6 +21,8 @@ open class TagField: UIScrollView {
     
     public var delimiter: String?
     
+    public var allowsDuplicate = true
+    
     public var lineBetweenSpace: CGFloat = 3.0
     
     public var allowMultipleSelection = false
@@ -160,7 +162,7 @@ open class TagField: UIScrollView {
     }
     
     public func append(tag: String) {
-        if isExistTag(tag) {
+        if !allowsDuplicate && isExistTag(tag) {
             clearTextField()
             return
         }
@@ -174,8 +176,14 @@ open class TagField: UIScrollView {
     }
     
     public func append(tags: [String]) {
-        for i in 0..<tags.filter( { !isExistTag($0) }).count {
-            let tagView = createTagView(text: tags[i], index: tagViews.count)
+        let t: [String]
+        if allowsDuplicate {
+            t = tags
+        } else {
+            t = tags.filter( { !isExistTag($0) })
+        }
+        for i in 0..<t.count {
+            let tagView = createTagView(text: t[i], index: tagViews.count)
             addSubview(tagView)
             tagViews.append(tagView)
         }
