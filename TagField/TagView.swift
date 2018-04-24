@@ -106,7 +106,9 @@ open class TagView: UIView {
     
     @objc
     private func onClickDelete(_ sender: UIButton) {
-        onTapDelete?(self)
+        if isSelected {
+            onTapDelete?(self)
+        }
     }
 
     
