@@ -94,6 +94,10 @@ extension ViewController: TagFieldDelegate {
         print("shouldEndEditing")
         return true
     }
+    
+    func tagField(_ tagField: TagField, shouldSelectAt index: Int) -> Bool {
+        return true
+    }
 }
 
 extension ViewController: TagFieldDataSource {

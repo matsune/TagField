@@ -23,7 +23,7 @@ public protocol TagFieldDelegate: class {
     func tagFieldShouldClear(_ tagField: TagField) -> Bool
     func tagFieldShouldEndEditing(_ tagField: TagField) -> Bool
     func tagFieldShouldBeginEditing(_ tagField: TagField) -> Bool
-    
+    func tagField(_ tagField: TagField, shouldSelectAt index: Int) -> Bool
 }
 
 public extension TagFieldDelegate {
@@ -56,6 +56,10 @@ public extension TagFieldDelegate {
     }
     
     func tagFieldShouldBeginEditing(_ tagField: TagField) -> Bool {
+        return true
+    }
+    
+    func tagField(_ tagField: TagField, shouldSelectAt index: Int) -> Bool {
         return true
     }
 }

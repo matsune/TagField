@@ -328,6 +328,11 @@ open class TagField: UIScrollView {
     }
     
     private func onTapTagLabel(_ tagView: TagView) {
+        if let index = tagViews.index(of: tagView),
+            let shouldSelect = tagDelegate?.tagField(self, shouldSelectAt: index), !shouldSelect {
+            return
+        }
+        
         if isReadonly {
             tagDelegate?.tagField(self, didSelect: tagView.text)
             return
