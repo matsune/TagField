@@ -338,10 +338,6 @@ open class TagField: UIScrollView {
             return
         }
         
-        // show keyboard but carret is stil hidden
-        textField.becomeFirstResponder()
-        isHiddenCaret = true
-        
         if !allowsMultipleSelection {
             // deselect if allowsMultipleSelection is false
             selectedTagViews.forEach { $0.setSelected(false, animated: true) }
