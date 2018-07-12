@@ -12,7 +12,7 @@ import TagField
 final class ViewController: UIViewController {
 
     @IBOutlet weak var tagField: TagField!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
@@ -47,6 +47,11 @@ final class ViewController: UIViewController {
     
     @IBAction func readOnlyValueChanged(_ sender: UISwitch) {
         tagField.isReadonly = sender.isOn
+        if tagField.isReadonly {
+            tagField.textAlignment = .right
+        } else {
+            tagField.textAlignment = .left
+        }
     }
 }
 
@@ -124,5 +129,12 @@ extension ViewController: TagFieldDataSource {
     // optional
     func tagField(_ tagField: TagField, interTagSpacingAt index: Int) -> CGFloat {
         return index == 0 ? 10 : 5
+    }
+    
+    func tagField(_ tagField: TagField, sideInsetAtLine line: Int) -> (left: CGFloat, right: CGFloat) {
+        if line == 1 {
+            return (30, 0)
+        }
+        return (0, 0)
     }
 }

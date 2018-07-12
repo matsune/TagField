@@ -53,6 +53,18 @@ open class TagField: UIScrollView {
         }
     }
     
+    public enum TagAlignment {
+        case left
+        case center
+        case right
+    }
+    
+    public var textAlignment: TagAlignment = .left {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+    
     public var numberOfLines = 0
     
     private var intrinsicContentHeight: CGFloat = 50
@@ -245,6 +257,7 @@ open class TagField: UIScrollView {
         var sideInset: (left: CGFloat, right: CGFloat) = dataSource?.tagField(self, sideInsetAtLine: line) ?? (0, 0)
         var x: CGFloat = padding.left + sideInset.left
         var y: CGFloat = padding.top
+        var lineStartTagViewIndex = 0
         
         // - tagLabels position
         for i in 0..<tagViews.count {
@@ -257,6 +270,21 @@ open class TagField: UIScrollView {
                 if i != 0 {
                     // new line
                     line += 1
+                    
+                    // alignment last line
+                    for n in lineStartTagViewIndex..<i where availableWidth > 0 {
+                        switch textAlignment {
+                        case .center:
+                            tagViews[n].frame.origin.x += (availableWidth / 2)
+                        case .right:
+                            tagViews[n].frame.origin.x += availableWidth
+                        default:
+                            break
+                        }
+                    }
+                    
+                    lineStartTagViewIndex = i
+                    
                     if isReadonly && numberOfLines > 0 && numberOfLines < line {
                         // clip label if over `numberOflines`
                         let minimumWidth: CGFloat = 10
@@ -265,12 +293,12 @@ open class TagField: UIScrollView {
                         }
                         break
                     } else {
+                        // reset new line sideInset
                         sideInset = dataSource?.tagField(self, sideInsetAtLine: line) ?? (0, 0)
                         // reset point
                         x = padding.left + sideInset.left
                         y = tagViews[i - 1].frame.maxY + lineBetweenSpace
-                        
-                        // refresh available width
+                        // reset available width
                         availableWidth = bounds.width - x - (padding.right + sideInset.right)
                     }
                 }
@@ -278,6 +306,7 @@ open class TagField: UIScrollView {
                 if tagSize.width > availableWidth {
                     // clipping
                     tagViews[i].frame = CGRect(x: x, y: y, width: availableWidth, height: tagSize.height)
+                    lineStartTagViewIndex = i+1
                 } else {
                     tagViews[i].frame = CGRect(origin: CGPoint(x: x, y: y), size: tagSize)
                 }
@@ -288,6 +317,17 @@ open class TagField: UIScrollView {
             intrinsicContentHeight = tagViews[i].frame.maxY
             
             x += tagSize.width + (dataSource?.tagField(self, interTagSpacingAt: i) ?? 2.0)
+        }
+        let availableWidth = bounds.width - x - (padding.right + sideInset.right)
+        for i in lineStartTagViewIndex..<tagViews.count where availableWidth > 0 {
+            switch textAlignment {
+            case .center:
+                tagViews[i].frame.origin.x += (availableWidth / 2)
+            case .right:
+                tagViews[i].frame.origin.x += availableWidth
+            default:
+                break
+            }
         }
         
         // - textField position
